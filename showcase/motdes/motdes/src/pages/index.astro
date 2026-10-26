@@ -1,0 +1,307 @@
+---
+import Layout from '../layouts/Layout.astro';
+import '../styles/sections.css';
+import { SECTION_TITLE_WORD, SECTION_TITLE_VIEWBOX, SECTION_TITLE_PATH } from '../lib/section-title.js';
+import { TOP_SCROLL_SECTIONS } from '../lib/top-sections.js';
+import { AI_CASE_BADGE, SERVICE_CASES } from '../lib/service-cases.js';
+import ProfileStory from '../components/ProfileStory.astro';
+
+// VISION 的两行中文保留现有马克笔动效；ABOUT 使用独立四幕个人介绍。
+const news = [
+  { date: '2026 08.20', title: '携手独立创作者，探索品牌视觉与动态表达', href: '/news' },
+  { date: '2026 05.16', title: '与生活方式品牌合作，打造全新线上作品集', href: '/news' },
+  { date: '2025 10.29', title: '联合创意工作室，开启 AI 与交互设计实验', href: '/news' },
+];
+
+// 从用户提供的素材选取五组环绕案例，保持原有滚动节奏。
+// thumb 与 video 对应同一案例；标题和标签只描述画面内容。
+const works = [
+  { label: 'SELECTED\n01 / 05', title: 'LIGHTSABER DUEL', titleCn: '红蓝光剑 · 动作片段', cats: ['animation', 'action', 'cinematic'], thumb: '/top/works/selected-20261008/duel.jpg', video: '/top/works/selected-20261008/duel.mp4', id: 'duel' },
+  { label: 'SELECTED\n02 / 05', title: 'FOREST SPIRITS', titleCn: '林间浮焰 · 奇幻世界', cats: ['fantasy', 'creatures', 'worldbuilding'], thumb: '/top/works/selected-20261008/forest.jpg', video: '/top/works/selected-20261008/forest.mp4', id: 'forest' },
+  { label: 'SELECTED\n03 / 05', title: 'ALLEY FIGHT', titleCn: '巷道武打 · 动作设计', cats: ['animation', 'action', 'choreography'], thumb: '/top/works/selected-20261008/alley.jpg', video: '/top/works/selected-20261008/alley.mp4', id: 'alley' },
+  { label: 'SELECTED\n04 / 05', title: 'CLOUD COMPANIONS', titleCn: '少女与伙伴 · 奇幻旅程', cats: ['fantasy', 'character', 'animation'], thumb: '/top/works/selected-20261008/cloud-cat.jpg', video: '/top/works/selected-20261008/cloud-cat.mp4', id: 'cloud-cat' },
+  { label: 'SELECTED\n05 / 05', title: 'GENTLE GIANT', titleCn: '精灵与巨猫 · 角色互动', cats: ['character', 'creatures', 'storytelling'], thumb: '/top/works/selected-20261008/gentle-giant.jpg', video: '/top/works/selected-20261008/gentle-giant.mp4', id: 'gentle-giant' },
+];
+
+
+const featuredCase = SERVICE_CASES.at(-1);
+
+const visionLines = ['撼动人心、让人怀抱希望的', '「世界」由此构筑'];
+---
+
+<Layout page="top" title="motdes, Inc">
+  {/* ============ 左侧滚动指示器 ============ */}
+  <div class="TopScrollIndicator__top_scroll_indicator" data-top-scroll-indicator>
+    <div class="TopScrollIndicator__section_list">
+      {/* 分组表来自 top-scroll-manager.js 那**一份**。以前这里另抄了一份，
+          改了那边的 label 这边不动，左栏和大标题会对不上。 */}
+      {TOP_SCROLL_SECTIONS.map((s) => (
+        <div class="TopScrollIndicator__section_item" data-section={s.id}>
+          <div class="TopScrollIndicator__section_main">
+            <div class="TopScrollIndicator__section_line">
+              <div class="TopScrollIndicator__section_label" data-section-label>{s.label}</div>
+            </div>
+          </div>
+          <div class="TopScrollIndicator__subsection_list">
+            {s.subsections.map(({ index }) => (
+              <div class="TopScrollIndicator__subsection_item" data-subsection={index}><div class="TopScrollIndicator__subsection_line"></div></div>
+            ))}
+          </div>
+        </div>
+      ))}
+    </div>
+  </div>
+
+  {/* ============ NEWS ============ */}
+  <div class="News__newsArea">
+    <div class="News__newsTitle">News</div>
+    <div class="News__newsList">
+      {news.map((n) => (
+        <div class="News__newsItem">
+          <div class="News__newsDate">{n.date}</div>
+          <div class="News__newsContent">
+            <a href={n.href} class="News__newsLink">{n.title}</a>
+          </div>
+        </div>
+      ))}
+    </div>
+  </div>
+
+  {/* ============ 01 KV ============ */}
+  <div class="SectionContainer__container" data-top_section="kv" data-snap-ratio="1">
+    <div class="SectionContainer__label">kv</div>
+    <div class="KV__container" data-kv-container>
+      <div class="KV__inner">
+        <div class="KV__scrollText"><span>scroll to explore →</span></div>
+      </div>
+    </div>
+  </div>
+
+  {/* ============ 02 WORKS INTRO ============ */}
+  <div class="SectionContainer__container" data-top_section="works_intro" data-snap-ratio="1">
+    <div class="SectionContainer__label">works_intro</div>
+    <div class="PageTop__worksIntro"></div>
+  </div>
+
+  {/* ============ 03 WORKS ============ */}
+  <div class="SectionContainer__container" data-top_section="works" data-snap-ratio="1">
+    <div class="SectionContainer__label">works</div>
+    <div class="Works__container" data-works-container>
+      <div class="Works__content">
+        <div class="Works__content_inner">
+          <div class="Works__list">
+            {works.map((w) => (
+              <div class="Works__item" data-works_item>
+                <div class="Works__item_info">
+                  <span class="Works__item_date">{w.label}</span>
+                </div>
+                <h3 class="Works__item_title" data-works_title>
+                  <a href="/works" class="Works__item_title_link">{w.title}</a>
+                </h3>
+                <p class="Works__item_title_ja">{w.titleCn}</p>
+                <ul class="Works__item_categoryList">
+                  {w.cats.map((c) => (
+                    <li class="Works__item_categoryList_item"><a href="/works">{c}</a></li>
+                  ))}
+                </ul>
+              </div>
+            ))}
+          </div>
+          <div class="Works__more">
+            <a href="/works" id="more-works-link" class="Works__more_link">
+              <span data-scramble-text>More Works</span>
+              <svg class="Works__more_link_icon" width="12" height="12" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path fill-rule="evenodd" clip-rule="evenodd" d="M1.575 13.15L11.819 2.918c-.092.628-.148 1.422-.148 2.216 0 .739.037 1.478.148 2.161l1.128-.277c-.092-.683-.129-1.404-.129-2.142 0-1.459.166-2.973.443-4.229-1.257.277-2.773.443-4.234.443-.739 0-1.461-.037-2.145-.129l-.277 1.126c.684.111 1.424.148 2.163.148.795 0 1.59-.055 2.219-.148L.743 12.319l.832.831z" fill="#fff"/>
+              </svg>
+            </a>
+          </div>
+        </div>
+      </div>
+      {/* 每件作品一屏，驱动 works snap 与 GL 缩略图 */}
+      <div class="Works__scroll">
+        {works.map((w) => (
+          <div class="Works__scroll_item" data-top_works_item={w.thumb} data-top_works_video={w.video} data-works_id={w.id}>
+            <div class="Works__scroll_item_thumb"></div>
+          </div>
+        ))}
+      </div>
+    </div>
+  </div>
+
+  {/* ============ 04–07 works_outro → ABOUT 连续轨道 → M 入场 → vision ============ */}
+  <div data-snapper data-profile-sequence>
+    <div class="SectionContainer__container" data-top_section="works_outro" data-snap-ratio="1.5">
+      <div class="SectionContainer__label">works_outro</div>
+      <div class="PageTop__worksOutro"></div>
+    </div>
+
+    <div class="SectionContainer__container" data-top_section="mission_in" data-snap-ratio="1">
+      <div class="SectionContainer__label">mission_in</div>
+    </div>
+
+    <div class="SectionContainer__container" data-top_section="mission" data-snap-ratio="1">
+      <div class="SectionContainer__label">mission</div>
+      <div class="ProfileStory__scroll" data-profile-scroll aria-hidden="true"></div>
+      <ProfileStory />
+    </div>
+
+    <div class="SectionContainer__container" data-top_section="vision" data-snap-ratio="1.8">
+      <div class="SectionContainer__label">vision</div>
+      <div class="MissionVision__visionContent"></div>
+      <div class="MissionVision__container" data-vision-container>
+        <div class="MissionVision__inner">
+          <div class="MissionVision__ttl MissionVision__portfolio_title" data-vision-title>
+            {/* 描边大标题。字形由 tools/build-section-title.mjs 从 Archivo 烤成路径，
+                这样 strokeDasharray 的"书写"动画不受字体加载时序影响。 */}
+            <svg viewBox={SECTION_TITLE_VIEWBOX} fill="none" role="img" aria-label={SECTION_TITLE_WORD} xmlns="http://www.w3.org/2000/svg">
+              <path d={SECTION_TITLE_PATH} stroke="#fff" vector-effect="non-scaling-stroke" />
+            </svg>
+          </div>
+          <div class="MissionVision__text" data-vision-text>
+            {visionLines.map((line, i) => (
+              <>
+                <span class="MissionVision__line" data-line-index={i}>
+                  <span class="MissionVision__marker" {...{ [`data-marker-${i}`]: true }}>{line}</span>
+                </span>
+                <br />
+              </>
+            ))}
+          </div>
+          <div class="MissionVision__text_en MissionVision__portfolio_intro" data-vision-text_en>
+            <h2 class="MissionVision__portfolio_statement" aria-label="STORIES IN MOTION">
+              {['STORIES', 'IN MOTION'].map((line) => (
+                <span data-portfolio-line aria-hidden="true">
+                  {Array.from(line).map((char) => (
+                    <span class="MissionVision__portfolio_char" data-portfolio-char>{char === ' ' ? '\u00A0' : char}</span>
+                  ))}
+                </span>
+              ))}
+            </h2>
+            <div class="MissionVision__portfolio_index">
+              <span class="MissionVision__portfolio_rule" data-portfolio-rule aria-hidden="true"></span>
+              <span data-portfolio-detail>SELECTED AI ANIMATION</span>
+              <span data-portfolio-detail>01—{String(SERVICE_CASES.length).padStart(2, '0')}</span>
+            </div>
+            <p class="MissionVision__portfolio_caption">
+              {['Characters, imagined worlds', 'and stories brought to life.'].map((line, index) => (
+                <>
+                  {line.split(' ').map((word, wordIndex) => (
+                    <>
+                      {wordIndex > 0 && ' '}
+                      <span class="MissionVision__portfolio_word_mask"><span data-portfolio-word>{word}</span></span>
+                    </>
+                  ))}
+                  {index === 0 && <br />}
+                </>
+              ))}
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  {/* ============ 08–09 vision_out + service_in（两端吸附）============ */}
+  <div data-section_wrap="vision_service">
+    <div class="SectionContainer__container" data-top_section="vision_out" data-snap-ratio="1">
+      <div class="SectionContainer__label">vision_out</div>
+      <div class="PageTop__visionOut"></div>
+    </div>
+    <div class="SectionContainer__container" data-top_section="service_in" data-snap-ratio="1">
+      <div class="SectionContainer__label">service_in</div>
+    </div>
+  </div>
+
+  {/* ============ 10 SERVICE ============ */}
+  <div class="SectionContainer__container" data-top_section="service" data-snap-ratio="1">
+    <div class="SectionContainer__label">service</div>
+    <div class="Service__container" data-service-container>
+      <div class="Service__scroll">
+        {SERVICE_CASES.map((_, index) => (
+          <div class="Service__scroll_item" data-service_scroll_item={index === SERVICE_CASES.length - 1 ? 'stellla' : 'service'}></div>
+        ))}
+      </div>
+      <div class="Service__content">
+        <div class="Service__content_inner">
+          <div class="Service__list">
+            {SERVICE_CASES.map((s) => (
+              <div class="Service__item" data-service_item data-service_id={s.id}>
+                <a href={s.video} class="Service__item_link" data-video-open={s.title} data-no-swup aria-label={`播放${s.title}`}></a>
+                <div class="Service__item_icon">{AI_CASE_BADGE}</div>
+                <div class="Service__item_title" data-service_title>{s.title}</div>
+                <div class="Service__item_description" data-service_description>{s.desc}</div>
+                <div class="Service__item_description_en" data-service_description>{s.descEn}</div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  {/* ============ 11 stellla ============ */}
+  <div class="SectionContainer__container" data-top_section="stellla" data-snap-ratio="1">
+    <div class="SectionContainer__label">stellla</div>
+    <div class="PageTop__stellla"></div>
+    <div class="PageTop__stelllaContent">
+      <div class="PageTop__stelllaContent_inner">
+        <div class="Stellla__container" data-top-stellla-content>
+          <div class="Stellla__inner">
+            <div class="Stellla__contentWrap">
+              <div class="Stellla__content">
+                <div class="Stellla__main">
+                  <div class="Stellla__main_logo">
+                    <a class="Stellla__main_logo_link" href={featuredCase.video} data-video-open={featuredCase.title} data-no-swup aria-label={`播放${featuredCase.title}`}>
+                      <span class="Stellla__case_heading">
+                        <span class="Stellla__case_badge">{AI_CASE_BADGE}</span>
+                        <span class="Stellla__case_title">{featuredCase.title}</span>
+                      </span>
+                    </a>
+                  </div>
+                  <div class="Stellla__main_text">
+                    <p>
+                      {featuredCase.desc}
+                    </p>
+                    <div class="Stellla__en">
+                      <p>
+                        {featuredCase.descEn}
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="Stellla__frame_container">
+            <div class="Stellla__frame" data-top-stellla-frame>
+              <div class="Stellla__cross">
+                <div class="Stellla__cross_item"></div>
+                <div class="Stellla__cross_item"></div>
+                <div class="Stellla__cross_item"></div>
+                <div class="Stellla__cross_item"></div>
+              </div>
+              <div class="Stellla__rect">
+                <div class="Stellla__rect_inner">
+                  <div class="Stellla__rect_line" data-line="top"></div>
+                  <div class="Stellla__rect_line" data-line="right"></div>
+                  <div class="Stellla__rect_line" data-line="bottom"></div>
+                  <div class="Stellla__rect_line" data-line="left"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <dialog class="VideoModal" data-video-modal data-lenis-prevent aria-label="案例视频">
+    <div class="VideoModal__shade" data-video-shade aria-hidden="true"></div>
+    <div class="VideoModal__player" data-video-player>
+      <video class="VideoModal__video" controls playsinline preload="none"></video>
+      <canvas class="VideoModal__preview" data-video-preview aria-hidden="true"></canvas>
+    </div>
+    <button class="VideoModal__close" type="button" data-video-close aria-label="关闭视频" autofocus>
+      <svg viewBox="0 0 20 20" aria-hidden="true"><path d="M5 5l10 10M15 5L5 15" /></svg>
+    </button>
+  </dialog>
+</Layout>

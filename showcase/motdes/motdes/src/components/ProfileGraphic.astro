@@ -1,0 +1,43 @@
+---
+interface Props { shape?: string; }
+const { shape = 'mesh' } = Astro.props;
+const paths = {
+  mesh: [
+    'M60 52 130 16 200 52 130 88Z',
+    'M60 52V128L130 164 200 128V52M130 88V164',
+    'M77.5 43 147.5 79M95 34 165 70M112.5 25 182.5 61',
+    'M77.5 61 147.5 25M95 70 165 34M112.5 79 182.5 43',
+    'M60 71 130 107 200 71M60 90 130 126 200 90M60 109 130 145 200 109',
+    'M77.5 61V137M95 70V146M112.5 79V155M147.5 79V155M165 70V146M182.5 61V137',
+    'M46 142H54M50 138V146M207 35H215M211 31V39',
+  ],
+  coordinate: [
+    'M120 28A72 72 0 1 1 119.99 28',
+    'M42 82C76 43 179 39 199 70S157 154 91 151 21 119 42 82Z',
+    'M92 31C58 54 46 103 73 142S147 173 166 135 164 53 125 28',
+    'M120 12V25M120 175V188M32 100H45M195 100H208',
+    'M116 100H124M120 96V104',
+  ],
+  construction: [
+    'M43 40H149V146H43Z',
+    'M69 26H175V132H69Z',
+    'M95 12H201V118H95Z',
+    'M43 40 95 12M149 40 201 12M149 146 201 118M43 146 95 118',
+    'M43 40 149 146M149 40 43 146M69 26 175 132',
+    'M36 162H208M43 157V167M201 157V167',
+  ],
+  orbit: [
+    'M120 35A65 65 0 1 1 119.99 35',
+    'M120 54A46 46 0 1 1 119.99 54',
+    'M42 100H198M120 22V178',
+    'M120 35 175 65 165 145 89 157 59 81Z',
+    'M120 35 165 145M175 65 89 157M59 81 165 145',
+    'M170 29H182M176 23V35',
+  ],
+};
+const selected = paths[shape as keyof typeof paths] ?? paths.mesh;
+---
+
+<svg class={`ProfileGraphic ProfileGraphic--${shape}`} viewBox="0 0 240 200" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+  {selected.map((d) => <path class="ProfileGraphic__draw" d={d} pathLength="1" vector-effect="non-scaling-stroke" />)}
+</svg>

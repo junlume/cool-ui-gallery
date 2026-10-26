@@ -1,0 +1,129 @@
+{
+  "snapshotDate": "2026-10-15",
+  "timezone": "Asia/Shanghai",
+  "sourceFilesCompared": 150,
+  "sourceMatchesWorkingProject": true,
+  "environment": {
+    "node": "v26.0.0",
+    "npm": "11.12.1"
+  },
+  "cleanInstall": {
+    "command": "npm ci --no-audit --no-fund",
+    "status": "passed",
+    "installedPackages": 807
+  },
+  "productionBuild": {
+    "command": "npm run build",
+    "status": "passed",
+    "pages": 1,
+    "output": "motdes/dist",
+    "note": "Generated dist is omitted from the source archive and is rebuilt with npm run build"
+  },
+  "offlineChecks": [
+    {
+      "command": "node analysis/profile-scroll/verify-profile-gl.mjs",
+      "status": "passed",
+      "checks": 547
+    },
+    {
+      "command": "node analysis/profile-scroll/verify-profile-damping.mjs",
+      "status": "passed",
+      "checks": 399
+    },
+    {
+      "command": "node analysis/site-soundtrack/verify-soundtrack.mjs",
+      "status": "passed",
+      "checks": 75
+    },
+    {
+      "command": "node analysis/opening-performance/verify-boot.mjs",
+      "status": "passed",
+      "scenarios": 2
+    }
+  ],
+  "assets": {
+    "sourceMatchesWorkingProject": true,
+    "sourceFilesCompared": 150,
+    "referencedAssets": [
+      "/favicon.png",
+      "/favicon.svg",
+      "/sounds/ambient-loop.mp3",
+      "/sounds/bgm.mp3",
+      "/sounds/opening-first.mp3",
+      "/top/coin/intro-grab-pullback.mp4",
+      "/top/coin/intro-poster.jpg",
+      "/top/coin/loop-pullback.mp4",
+      "/top/profile/selected-20261012/flame-spirit.jpg",
+      "/top/profile/selected-20261012/flame-spirit.mp4",
+      "/top/profile/selected-20261012/girl-and-cat.jpg",
+      "/top/profile/selected-20261012/girl-and-cat.mp4",
+      "/top/profile/selected-20261012/scarlet-dance.jpg",
+      "/top/profile/selected-20261012/scarlet-dance.mp4",
+      "/top/profile/selected-20261012/storm-blade.jpg",
+      "/top/profile/selected-20261012/storm-blade.mp4",
+      "/top/service/selected-20261008/alley-breakthrough.mp4",
+      "/top/service/selected-20261008/forest-awakening.mp4",
+      "/top/service/selected-20261008/metro-encounter.mp4",
+      "/top/works/selected-20261008/alley.jpg",
+      "/top/works/selected-20261008/alley.mp4",
+      "/top/works/selected-20261008/cloud-cat.jpg",
+      "/top/works/selected-20261008/cloud-cat.mp4",
+      "/top/works/selected-20261008/duel.jpg",
+      "/top/works/selected-20261008/duel.mp4",
+      "/top/works/selected-20261008/forest.jpg",
+      "/top/works/selected-20261008/forest.mp4",
+      "/top/works/selected-20261008/gentle-giant.jpg",
+      "/top/works/selected-20261008/gentle-giant.mp4"
+    ],
+    "unexpectedMissing": [],
+    "unusedLegacyAudioAbsent": [
+      "/sounds/bgm.mp3"
+    ],
+    "profileTitles": [
+      "少女与猫",
+      "风暴之刃",
+      "焰灵奇想",
+      "赤焰之舞"
+    ]
+  },
+  "music": {
+    "tracks": [
+      {
+        "asset": "/sounds/opening-first.mp3",
+        "bytes": 2214391,
+        "sha256": "405db2b4b26bf4d78332da0655ae4f47398dc9cd2a514c1fe47771b895f8cdf6",
+        "seconds": 92.212245,
+        "integratedLUFS": -24.25
+      },
+      {
+        "asset": "/sounds/ambient-loop.mp3",
+        "bytes": 1970294,
+        "sha256": "854da868d6f5b96318a84bf9f133c857079f850e893ed9eaabe5a46f14fe83b1",
+        "seconds": 82.020979,
+        "integratedLUFS": -24.26
+      }
+    ],
+    "runtimeVolume": 0.7,
+    "playerElements": 1,
+    "sequence": "First song starts with opening and plays once then the second song loops on the same player",
+    "activation": "Early button click and genuine page click can activate initial sound without accidental mute Browser policies remain respected"
+  },
+  "browserVerification": {
+    "status": "not performed",
+    "reason": "Existing browser protocol limitation",
+    "scope": "No browser GPU rendering audible playback or deployed site validation is claimed"
+  },
+  "knownScope": {
+    "implementedPages": [
+      "/"
+    ],
+    "placeholderRoutes": [
+      "/news",
+      "/works",
+      "/about",
+      "/stellla",
+      "/contact"
+    ],
+    "legacyAudio": "Old optional sound-manager assets are absent Current coin opening uses the two bundled music files"
+  }
+}

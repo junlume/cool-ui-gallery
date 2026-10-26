@@ -1,0 +1,68 @@
+/*
+ * 设计令牌。数值全部取自 alche.studio 的产物 CSS，不是估值。
+ * 唯一的主动偏离：中文字距（见 --ls-cjk-*），原站为日文假名调的 .15em/.2em
+ * 放到中文字身框上会显得拥挤。
+ */
+:root {
+  /* ---- 色彩：纯黑白 + 一个酸性黄 ---- */
+  --c-bg: #000;
+  --c-fg: #fff;
+  --c-accent: #d7ff00;          /* 全站唯一彩色，只用于作品「战绩」标签 */
+  --c-accent-bg: rgba(255, 255, 255, 0.1);
+
+  --c-gray-1: #bababa;          /* 页脚链接 */
+  --c-gray-2: #a9a9a9;
+  --c-gray-3: #999;             /* 指示器子刻度 */
+  --c-gray-4: #7e7e7e;          /* 次级文字、页脚图标 */
+  --c-gray-5: #777;             /* 分类胶囊描边 */
+  --c-gray-6: #555;             /* 英文副文 */
+  --c-gray-7: #333;             /* 标题描边、构造线 */
+
+  --c-fg-80: rgba(255, 255, 255, 0.8);
+  --c-fg-60: rgba(255, 255, 255, 0.6);
+  --c-fg-50: rgba(255, 255, 255, 0.5);
+  --c-fg-40: rgba(255, 255, 255, 0.4);
+  --c-fg-10: rgba(255, 255, 255, 0.1);
+
+  /* ---- 字体：Adobe kit 锁域名，这里全部用 OFL 自托管替代 ---- */
+  --f-cjk: 'Noto Sans SC Variable', 'Noto Sans SC', 'PingFang SC', 'Hiragino Sans GB', sans-serif;
+  /* 替 ibm-plex-sans-jp：该家族的拉丁部分本就是 IBM Plex Sans，
+     中文回落到 Noto Sans SC —— 比找一个"IBM Plex 中文"更贴近原味 */
+  --f-ui: 'IBM Plex Sans Variable', 'IBM Plex Sans', var(--f-cjk);
+  --f-display: 'Archivo Variable', 'Archivo', system-ui, sans-serif; /* 替 acumin-pro */
+  --f-mono: 'IBM Plex Mono', ui-monospace, monospace;
+  --f-code: 'Google Sans Code', 'IBM Plex Mono', ui-monospace, monospace;  /* 与原站同款，非替代 */
+  --f-num: 'Barlow', system-ui, sans-serif;        /* 与原站同款：作品战绩数字 */
+  --f-roboto: 'Roboto Variable', 'Roboto', system-ui, sans-serif;  /* 与原站同款 */
+
+  /* ---- 字距 ---- */
+  --ls-logo: 0.2rem;
+  --ls-nav: 0.1rem;
+  --ls-mono: 0.1em;
+  --ls-date: 0.2em;
+  --ls-cjk-tight: 0.08em;       /* 原 .15em，中文下收紧 */
+  --ls-cjk-loose: 0.12em;       /* 原 .2em，中文下收紧 */
+
+  /* ---- 版式几何 ---- */
+  --header-pad-y: 40px;
+  --header-pad-x: 50px;
+  --nav-gap: 40px;
+  --works-item-left: 8%;
+  --works-item-width: 70%;
+  --works-item-bottom: 10vh;
+
+  /* ---- 缓动：原站实测 ---- */
+  --ease-loading: cubic-bezier(0.53, 0.25, 0.3, 0.99);
+  --t-fast: 0.3s;
+  --t-base: 0.5s;
+  --t-page: 1.5s;
+}
+
+@media not screen and (min-width: 769px) {
+  :root {
+    --header-pad-y: 30px;
+    --header-pad-x: 10px;
+    --works-item-left: 4%;
+    --works-item-width: 91%;
+  }
+}

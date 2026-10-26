@@ -1,0 +1,895 @@
+/* Header / SideMenu / Loading / SoundIntro / Footer / Outro —— 常驻框架件 */
+
+/* ================= Header ================= */
+.Header__container {
+  --header-inline-gutter: 4vw;
+  position: fixed;
+  z-index: 99;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  padding: var(--header-pad-y) var(--header-inline-gutter);
+  pointer-events: none;
+  overflow: hidden;
+  transition: color var(--t-base) ease, transform var(--t-base) ease, opacity var(--t-base) ease;
+}
+[data-page_changed='false'] .Header__container {
+  transition: opacity var(--t-page), color var(--t-base) ease, transform var(--t-base) ease;
+}
+
+/* MISSION / VISION 是白场：整条 header 翻黑 */
+[data-current_section='mission'] .Header__container,
+[data-current_section='vision'] .Header__container,
+[data-current_section='vision_out'] .Header__container {
+  color: #000;
+}
+[data-current_section='mission'] .Header__container .Header__contact,
+[data-current_section='vision'] .Header__container .Header__contact,
+[data-current_section='vision_out'] .Header__container .Header__contact {
+  border-color: #000;
+}
+/* 字标是 SVG，翻黑要落在 path 的 fill 上 —— 只改 color 它不会跟着变。
+   加了亮底那一段之后这条才真正生效，否则白字标压在白背景上是看不见的。 */
+[data-current_section='mission'] .Header__container .Header__logo svg path,
+[data-current_section='vision'] .Header__container .Header__logo svg path,
+[data-current_section='vision_out'] .Header__container .Header__logo svg path {
+  fill: #000;
+}
+
+/* stellla / footer：整条滑出 */
+@media only screen and (min-width: 769px) {
+  [data-current_section='stellla'] .Header__container,
+  [data-current_section='footer'] .Header__container {
+    transform: translateY(-100%);
+  }
+}
+@media not screen and (min-width: 769px) {
+  [data-current_section='stellla'] .Header__container,
+  [data-current_section='footer'] .Header__container {
+    opacity: 0;
+  }
+}
+[data-page='top'][data-gl_loading_end='false'] .Header__container { opacity: 0; }
+
+.Header__logo {
+  pointer-events: auto;
+  font-family: var(--f-ui);
+  font-size: 24px;
+  font-weight: 700;
+  letter-spacing: var(--ls-logo);
+}
+@media not screen and (min-width: 769px) {
+  .Header__logo { font-size: 18px; }
+}
+.Header__logo a { display: block; color: inherit; }
+.Header__logo a svg { display: block; height: auto; }
+.Header__logo a svg path { transition: fill 0.5s ease; }
+
+.Header__nav {
+  display: flex;
+  gap: var(--nav-gap);
+  font-family: var(--f-ui);
+  font-size: 14px;
+  letter-spacing: var(--ls-nav);
+}
+@media not screen and (min-width: 769px) {
+  .Header__nav { grid-column: 1 / -1; justify-content: space-between; gap: 12px; font-size: 11px; }
+}
+.Header__nav_item { pointer-events: auto; }
+.Header__nav_item a {
+  color: inherit;
+  font-family: var(--f-mono);
+  letter-spacing: var(--ls-mono);
+  transition: opacity var(--t-fast) ease;
+}
+.Header__nav_item a:hover { opacity: 0.7; }
+
+.Header__right_controls { display: flex; align-items: center; gap: 16px; }
+@media only screen and (min-width: 769px) {
+  .Header__container { display: grid; grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr); }
+  /* The 1920 × 888 backdrop is contained and scaled to 92 percent. */
+  [data-page='top'][data-coin-opening='true'] .Header__container {
+    --header-inline-gutter: max(4vw, calc((100vw - 92vh * 1920 / 888) / 2));
+  }
+  .Header__logo { justify-self: start; }
+  .Header__right_controls { justify-self: end; }
+}
+@media not screen and (min-width: 769px) {
+  .Header__container { display: grid; grid-template-columns: minmax(0, 1fr) auto; row-gap: 18px; padding-block: 24px; }
+  .Header__logo { grid-column: 1; grid-row: 1; justify-self: start; }
+  .Header__logo a svg { width: 112px; }
+  .Header__right_controls { grid-column: 2; grid-row: 1; justify-self: end; }
+  .Header__right_controls .Header__contact { padding: 8px 12px; font-size: 10px; }
+}
+
+.Header__contact {
+  padding: 12px 20px;
+  border: 1px solid var(--c-fg-50);
+  border-radius: 999px;
+  font-family: var(--f-mono);
+  font-size: 11px;
+  letter-spacing: 0;
+  pointer-events: auto;
+  transition: background-color var(--t-fast) ease, color var(--t-fast) ease, border-color var(--t-fast) ease;
+}
+.Header__contact:hover {
+  background-color: var(--c-fg);
+  border-color: var(--c-fg);
+  color: var(--c-bg);
+}
+
+.SoundToggle__button { pointer-events: auto; padding: 4px; }
+.SoundToggle__sound_bars { display: flex; align-items: flex-end; gap: 3px; height: 14px; }
+.SoundToggle__bar { width: 2px; height: 4px; background: currentColor; transition: height var(--t-fast) ease; }
+.SoundToggle__button[data-muted='false'] .SoundToggle__bar:nth-child(1) { height: 8px; }
+.SoundToggle__button[data-muted='false'] .SoundToggle__bar:nth-child(2) { height: 14px; }
+.SoundToggle__button[data-muted='false'] .SoundToggle__bar:nth-child(3) { height: 6px; }
+
+/* ================= 汉堡 / 侧栏 ================= */
+.HamburgerIcon__hamburger {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 5px;
+  width: 30px;
+  height: 30px;
+  position: fixed;
+  top: 24px;
+  right: 14px;
+  z-index: 1001;
+  pointer-events: auto;
+  transition: opacity var(--t-base);
+}
+@media only screen and (min-width: 769px) {
+  .HamburgerIcon__hamburger { display: none; }
+}
+.HamburgerIcon__line {
+  display: block;
+  width: 20px;
+  height: 2px;
+  background-color: var(--c-fg);
+  transition: all var(--t-fast) ease;
+  transform-origin: center;
+}
+[data-current_section='mission'] .HamburgerIcon__line,
+[data-current_section='vision'] .HamburgerIcon__line,
+[data-current_section='vision_out'] .HamburgerIcon__line {
+  background-color: #000;
+}
+[data-current_section='stellla'] .HamburgerIcon__hamburger,
+[data-page='top'][data-gl_loading_end='false'] .HamburgerIcon__hamburger {
+  opacity: 0;
+}
+
+.SideMenu__overlay { display: block; }
+.SideMenu__backdrop,
+.SideMenu__menu { display: none; }
+.SideMenu__overlay[data-open] .SideMenu__backdrop {
+  display: block;
+  position: fixed;
+  inset: 0;
+  z-index: 999;
+  background: rgba(0, 0, 0, 0.85);
+}
+.SideMenu__overlay[data-open] .SideMenu__menu {
+  display: flex;
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  align-items: center;
+  justify-content: center;
+}
+.SideMenu__menu_inner { display: flex; flex-direction: column; gap: 20px; text-align: center; }
+.SideMenu__menu_item a { font-family: var(--f-mono); font-size: 20px; letter-spacing: var(--ls-mono); }
+
+/* 侧栏底部的社交入口。数值逐条对齐原站 components.css。 */
+.SideMenu__social_links {
+  position: absolute;
+  bottom: 40px;
+  left: 30px;
+  right: 30px;
+  display: flex;
+  gap: 20px;
+  justify-content: space-between;
+  flex-wrap: wrap;
+}
+.SideMenu__social_link {
+  display: inline-block;
+  color: #fff;
+  font-family: var(--f-mono);
+  font-size: 14px;
+  letter-spacing: 0.1rem;
+  text-decoration: none;
+  opacity: 0.6;
+  transition: opacity 0.3s ease, transform 0.3s ease;
+}
+.SideMenu__social_link span { display: block; transition: border-color 0.3s ease; }
+
+/* ================= Loading ================= */
+.Loading__container {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  background-color: var(--c-bg);
+  opacity: 1;
+; pointer-events: auto; }
+.Loading__container[data-hidden] { display: none; }
+.Loading__lottieContainer {
+  position: absolute;
+  top: 0;
+  width: 80%;
+  height: 100%;
+  left: 50%;
+  transform: translate(-50%);
+  /* 两端各 10% 渐隐 —— 构造线跑出画面时不是硬切，而是淡掉 */
+  mask: linear-gradient(to right, transparent 0%, black 10%, black 90%, transparent 100%);
+  -webkit-mask: linear-gradient(to right, transparent 0%, black 10%, black 90%, transparent 100%);
+}
+.Loading__lottie,
+.Loading__logo {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.Loading__logo { z-index: 10; opacity: 0; }
+.Loading__text {
+  opacity: 0;
+  position: absolute;
+  bottom: max(10px, 50% - 14vmax);
+  left: 50%;
+  transform: translate(-50%, -50%);
+  color: var(--c-fg);
+  font-size: 0.7vmax;
+  font-weight: 300;
+  line-height: 1.4;
+  text-align: center;
+  white-space: nowrap;
+  pointer-events: none;
+  z-index: 11;
+  font-family: var(--f-mono);
+  transition: opacity var(--t-base);
+}
+
+/* ================= SoundIntro ================= */
+.SoundIntro__overlay {
+  position: fixed;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  z-index: 200;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity var(--t-base) ease;
+}
+.SoundIntro__overlay[data-state='visible'] { opacity: 1; pointer-events: auto; }
+.SoundIntro__panel {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  padding: 16px var(--header-pad-x);
+  background: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(8px);
+  border-top: 1px solid var(--c-fg-10);
+}
+.SoundIntro__inner { display: flex; align-items: center; gap: 24px; width: 100%; }
+.SoundIntro__label {
+  font-family: var(--f-mono);
+  font-size: 10px;
+  letter-spacing: 0.2em;
+  color: var(--c-gray-4);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.SoundIntro__marker { width: 5px; height: 5px; background: var(--c-accent); display: block; }
+.SoundIntro__text { font-size: 13px; letter-spacing: var(--ls-cjk-tight); flex: 1; }
+.SoundIntro__actions { display: flex; gap: 10px; }
+.SoundIntro__accept,
+.SoundIntro__decline {
+  font-family: var(--f-ui);
+  font-size: 12px;
+  letter-spacing: var(--ls-cjk-tight);
+  padding: 10px 20px;
+  border-radius: 999px;
+  border: 1px solid var(--c-fg-50);
+  transition: background-color var(--t-fast) ease, color var(--t-fast) ease;
+}
+.SoundIntro__accept { background: var(--c-fg); color: var(--c-bg); border-color: var(--c-fg); }
+.SoundIntro__decline:hover { background: var(--c-fg-10); }
+.SoundIntro__hint { position: fixed; right: 60px; top: 80px; z-index: 200; opacity: 0; transition: opacity var(--t-base); }
+.SoundIntro__hint[data-state='visible'] { opacity: 1; }
+.SoundIntro__hint_text { font-family: var(--f-ui); font-size: 11px; color: var(--c-gray-1); }
+
+/* ================= Outro ================= */
+/* ⚠️ 不能给 wrapper 加 overflow:hidden。加了它就变成滚动容器，里面那块
+   position:sticky 的屏会相对**它**定位而不是视口 —— 视觉上就是完全不吸附、
+   跟着页面一路划走（实测吸附段末尾字标跑到 y −15.9%～15.8%，整个飘到视口上方）。 */
+/* 前 250vh 描线填实；再留 250vh 给 MOTDES 退场与感谢文案入场。 */
+.TopPageOutro__wrapper { position: relative; width: 100%; height: 600vh; }
+.TopPageOutro__screen { position: sticky; top: 0; width: 100%; height: 100vh; }
+.TopPageOutro__canvas { position: absolute; inset: 0; width: 100%; height: 100%; }
+.TopPageOutro__screen_inner { position: absolute; inset: 0; }
+.TopPageOutro__lottie { position: absolute; inset: 0; }
+/* 图纸和字标都是铺满整块 outro 屏的同一张画布，slice 铺排后逐点对齐。
+   字标在画布上的宽度已经按"85.7% 视口"折算进 lib/outro-svg.js，
+   这里不再另外缩放 —— 原来那句 width:20.4% 是旧版只放一个 M 时留下的。 */
+.TopPageOutro__lottie,
+.TopPageOutro__logo { position: absolute; inset: 0; }
+/* 填充字标盖在构造线之上；构造线等六字填实后再由控制器淡出。 */
+.TopPageOutro__lottie { z-index: 1; }
+.TopPageOutro__logo { z-index: 2; }
+.Outro__svg,
+.Outro__mark { width: 100%; height: 100%; display: block; }
+/* 线宽与颜色取自 Lottie（.ref/lottie/top/outro/data.json）：每条构造线的描边是
+   宽 0.5、色 rgb(0.5687)³ = #919191。
+   和录屏对得上：0.5 画布单位 × (3830/1100) = 1.74 源像素，× 145 = 墨迹积分 252，
+   实测积分 2.3 px × 100 = 230（视频压缩会压低峰值）。我之前按录屏反推的
+   0.66/#6c6c6c 积分同样是 248 —— 总墨量对，但线更粗更暗，不是原样。 */
+.Outro__svg line,
+.Outro__svg circle { fill: none; stroke: #919191; stroke-width: 0.5; }
+/* 圆是 corcle_s：描边宽 2 × 图层缩放 17.1% = 0.342，而且是**虚线**（线段 16×17.1%）。
+   虚线的节奏由控制器写进 stroke-dasharray —— 它同时要负责这个圆的画出过程。 */
+.Outro__svg .ocons-circle { stroke-width: 0.342; }
+/* 六个字母统一从描边到填实；初始隐藏轮廓与填充，避免初始化前闪出 M。
+   描边宽度同样来自 Lottie：logoアウトライン 的 st 宽 1 × 图层缩放 48% = 0.48，
+   和构造线的 0.5 几乎同粗 —— 原站那一帧里字母轮廓和辅助线看着就是一样细的。
+   我们原来写 2，粗了四倍多。 */
+.Outro__mark [data-outro-glyph] { stroke: #fff; stroke-width: 0.48; stroke-dasharray: 0 1; fill: #fff; fill-opacity: 0; }
+.Outro__name path { fill: #fff; stroke: none; opacity: 0; }
+@media (prefers-reduced-motion: reduce) {
+  .Outro__mark [data-outro-glyph],
+  .Outro__name path { transform: none; }
+}
+.TopPageOutro__logo_text {
+  font-family: var(--f-display);
+  font-size: 180px;
+  font-weight: 700;
+  line-height: 1;
+}
+
+/* ================= Footer =================
+ * 逐条对齐原站。两个容易做错的地方：
+ *  · 首页时页脚是 position:absolute 吸在底部 —— 因为 outro 那块全屏幕
+ *    要盖在它上面，页脚不能参与文档流把页面撑高
+ *  · 版权是 32px 的大字右对齐，不是常见的小字灰注脚
+ * ------------------------------------------------------------------ */
+.Footer__footer {
+  color: #fff;
+  padding: 50px 0 2px;
+  position: relative;
+  width: 100%;
+  opacity: 0;
+  transition: opacity var(--t-base);
+}
+[data-phase='ready'] .Footer__footer { opacity: 1; }
+[data-page='top'] .Footer__footer {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  background-color: transparent;
+}
+
+.Footer__inner { margin: 0 auto; padding: 0; position: relative; }
+.Footer__top { display: flex; gap: 40px; padding: 0 36px; justify-content: space-between; }
+.Footer__top_links { display: flex; gap: 40px; }
+.Footer__top_contact { display: flex; flex-direction: column; gap: 15px; }
+.Footer__column { display: flex; flex-direction: column; gap: 14px; position: relative; }
+
+.Footer__pageLink,
+.Footer__linksTitle {
+  font-family: var(--f-mono);
+  font-size: 14px;
+  font-weight: 400;
+  letter-spacing: 0.02em;
+  margin: 0;
+  transition: opacity var(--t-fast) ease;
+}
+.Footer__pageLink:hover { opacity: 0.7; }
+.Footer__linksTitle { display: flex; align-items: center; gap: 8px; }
+.Footer__linksTitle_arrow { width: 10px; }
+
+.Footer__linkList { display: flex; flex-direction: column; gap: 3px; }
+.Footer__linkList .Footer__link {
+  color: var(--c-gray-4);
+  text-decoration: none;
+  font-family: var(--f-mono);
+  font-size: 13px;
+  font-weight: 300;
+  letter-spacing: 0.02em;
+  transition: opacity var(--t-fast) ease, color var(--t-fast) ease;
+}
+.Footer__linkList .Footer__link:hover { color: #bbb; }
+.Footer__social { display: flex; gap: 20px; }
+
+.Footer__contact { display: flex; gap: 40px; }
+.Footer__contact_button { display: flex; align-items: center; gap: 10px; margin-left: auto; }
+.Footer__contact_button_text {
+  font-size: 16px;
+  font-family: var(--f-mono);
+  line-height: 1;
+  color: var(--c-gray-4);
+  transition: color var(--t-fast) ease;
+}
+/* 圆形描边图标，hover 时整个反白 —— 连里面的箭头也翻成黑色 */
+.Footer__contact_button_icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid var(--c-gray-4);
+  border-radius: 50%;
+  padding: 8px;
+  overflow: hidden;
+  transition: background-color var(--t-fast) ease;
+}
+.Footer__contact_button:hover .Footer__contact_button_text { color: #bbb; }
+.Footer__contact_button:hover .Footer__contact_button_icon { background-color: #fff; }
+.Footer__contact_button:hover .Footer__contact_button_icon svg path { fill: #000; }
+
+.Footer__privacyLicense { margin-left: auto; display: flex; gap: 20px; flex-direction: row; }
+.Footer__privacyLicense_link {
+  text-decoration: none;
+  font-family: var(--f-mono);
+  font-size: 14px;
+  color: var(--c-gray-4);
+  transition: color var(--t-fast) ease;
+}
+.Footer__privacyLicense_link:hover { color: #bbb; }
+
+.Footer__copyright {
+  padding: 0 30px;
+  margin-top: 35px;
+  text-align: right;
+  font-family: var(--f-display);
+  font-size: 32px;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+}
+
+/* 页脚字标。原站在首页隐藏 —— 首页底部已经有 outro 的大字标，再放一个会重复。 */
+.Footer__logo { width: 100%; margin-top: 20px; padding: 0 15px; color: var(--c-fg); }
+.Footer__logo svg { width: 100%; height: auto; }
+body[data-page='top'] .Footer__logo { display: none; }
+
+/* 原站这两条把汉堡与侧栏在桌面端也保持在流内（靠各自的媒体查询控制可见性）。 */
+.Header__hamburger { display: flex; }
+.Header__side_menu { display: block; }
+
+/* ================= 汉堡图标 =================
+ * 三条线。展开时第 1 条下移 6px 转 45°、第 2 条隐去、第 3 条上移 6px 转 −45°
+ * —— 位移量正好等于线高 2px + 间距 4px，所以两条线会精确交于中心。
+ * ------------------------------------------------------------------ */
+.HamburgerIcon__hamburger {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 30px;
+  height: 30px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  pointer-events: auto;
+  z-index: 1001;
+  position: relative;
+  transition: opacity var(--t-base);
+}
+[data-page_changed='false'] .HamburgerIcon__hamburger { transition: opacity var(--t-page); }
+.HamburgerIcon__line {
+  display: block;
+  width: 20px;
+  height: 2px;
+  background-color: #fff;
+  transition: all var(--t-fast) ease;
+  transform-origin: center;
+}
+.HamburgerIcon__line:not(:last-child) { margin-bottom: 4px; }
+[data-current_section='mission'] .HamburgerIcon__hamburger .HamburgerIcon__line,
+[data-current_section='vision'] .HamburgerIcon__hamburger .HamburgerIcon__line,
+[data-current_section='vision_out'] .HamburgerIcon__hamburger .HamburgerIcon__line { background-color: #000; }
+[data-current_section='stellla'] .HamburgerIcon__hamburger,
+[data-page='top'][data-gl_loading_end='false'] .HamburgerIcon__hamburger { opacity: 0; }
+[data-open='true'] .HamburgerIcon__line:nth-child(1) { transform: translateY(6px) rotate(45deg); }
+[data-open='true'] .HamburgerIcon__line:nth-child(2) { opacity: 0; }
+[data-open='true'] .HamburgerIcon__line:nth-child(3) { transform: translateY(-6px) rotate(-45deg); }
+
+/* ================= 侧边菜单 ================= */
+.SideMenu__overlay {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 999;
+  visibility: visible;
+  pointer-events: none;
+  transition: opacity var(--t-fast) ease;
+}
+.SideMenu__overlay[data-open='true'] { pointer-events: auto; }
+.SideMenu__backdrop {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  cursor: pointer;
+  z-index: 1;
+  opacity: 0;
+  transition: opacity var(--t-fast) ease;
+}
+[data-open='true'] .SideMenu__backdrop { transform: translateZ(0); opacity: 1; }
+/* 菜单面板本身不铺色，靠 backdrop-filter 把身后的 3D 场景糊掉 */
+.SideMenu__menu {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 100%;
+  height: 100dvh;
+  border-left: 1px solid rgba(255, 255, 255, 0.05);
+  z-index: 2;
+  backdrop-filter: blur(10px);
+  transition: opacity 0.4s, backdrop-filter 0.4s ease-out;
+  opacity: 0;
+}
+[data-open='true'] .SideMenu__menu { backdrop-filter: blur(10px); opacity: 1; }
+.SideMenu__menu_inner {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  justify-content: center;
+  padding-right: 30px;
+  height: 100%;
+}
+/* 每项左侧一条短横线，当前页时线变长变白、整项右移 10px */
+.SideMenu__menu_item {
+  position: relative;
+  margin-bottom: 0;
+  font-family: var(--f-mono);
+  font-weight: 600;
+  letter-spacing: 0;
+  padding-left: 30px;
+  transition: padding-left var(--t-fast) ease;
+}
+.SideMenu__menu_item::before {
+  content: '';
+  display: block;
+  width: 10px;
+  height: 1px;
+  background-color: rgba(255, 255, 255, 0.5);
+  position: absolute;
+  top: 50%;
+  left: 0;
+  transform: translateY(-50%);
+  transition: background-color var(--t-fast) ease;
+}
+.SideMenu__menu_item[data-active='true'] { padding-left: 40px; }
+.SideMenu__menu_item[data-active='true']::before { background-color: #fff; width: 20px; }
+.SideMenu__menu_item[data-active='true'] a { color: #fff; opacity: 1; }
+.SideMenu__menu_item a {
+  display: block;
+  color: #fff;
+  font-family: var(--f-ui);
+  font-size: 20px;
+  letter-spacing: 0.1rem;
+  text-decoration: none;
+  padding: 10px 0;
+  border-bottom: 1px solid transparent;
+  opacity: 0.7;
+  transition: opacity var(--t-fast) ease;
+}
+.SideMenu__menu_item a:hover { opacity: 0.7; }
+.SideMenu__menu_item a span { display: block; }
+.SideMenu__social_links {
+  position: absolute;
+  bottom: 40px;
+  left: 30px;
+  right: 30px;
+  display: flex;
+  gap: 20px;
+  justify-content: space-between;
+  flex-wrap: wrap;
+}
+.SideMenu__social_link {
+  display: inline-block;
+  color: #fff;
+  font-family: var(--f-mono);
+  font-size: 14px;
+  letter-spacing: 0.1rem;
+  text-decoration: none;
+  opacity: 0.6;
+  transition: opacity var(--t-fast) ease, transform var(--t-fast) ease;
+}
+.SideMenu__social_link span { display: block; transition: border-color var(--t-fast) ease; }
+.SideMenu__hamburger { position: absolute; right: 10px; top: 27px; }
+
+/* ================= 声音开关 =================
+ * 三根 1px 竖条。静音时整体降到 0.4 透明度 —— 不换图标，只调明度。
+ * ------------------------------------------------------------------ */
+.SoundToggle__button {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  padding: 8px;
+  background: transparent;
+  border-radius: 999px;
+  color: inherit;
+  cursor: pointer;
+  pointer-events: auto;
+  transition:
+    background-color var(--t-fast) cubic-bezier(0.25, 0.46, 0.45, 0.94),
+    border-color var(--t-fast) cubic-bezier(0.25, 0.46, 0.45, 0.94),
+    transform var(--t-fast) cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+.SoundToggle__button:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+  border-color: rgba(255, 255, 255, 0.8);
+  transform: scale(1.05);
+}
+[data-current_section='mission'] .SoundToggle__button,
+[data-current_section='vision'] .SoundToggle__button,
+[data-current_section='vision_out'] .SoundToggle__button,
+[data-current_section='footer'] .SoundToggle__button { border-color: rgba(0, 0, 0, 0.5); color: #000; }
+[data-current_section='mission'] .SoundToggle__button:hover,
+[data-current_section='vision'] .SoundToggle__button:hover,
+[data-current_section='vision_out'] .SoundToggle__button:hover,
+[data-current_section='footer'] .SoundToggle__button:hover { background-color: rgba(0, 0, 0, 0.1); border-color: rgba(0, 0, 0, 0.8); }
+[data-current_section='mission'] .SoundToggle__button .SoundToggle__bar,
+[data-current_section='vision'] .SoundToggle__button .SoundToggle__bar,
+[data-current_section='vision_out'] .SoundToggle__button .SoundToggle__bar,
+[data-current_section='footer'] .SoundToggle__button .SoundToggle__bar { background-color: #000; }
+.SoundToggle__sound_bars { display: flex; align-items: center; justify-content: center; gap: 3px; height: 16px; }
+.SoundToggle__bar {
+  width: 1px;
+  background-color: currentColor;
+  border-radius: 1.5px;
+  transition: opacity var(--t-fast) cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+.SoundToggle__button[data-muted='true'] .SoundToggle__bar { opacity: 0.4; }
+
+/* ================= 首访声音确认条 =================
+ * 入场是三段错开的：
+ *   0.0s  面板从 translateY(100%) 上滑，同时淡入   0.7s
+ *   0.5s  顶部 1px 细线从左侧 scaleX 展开          0.6s
+ *   1.1s  黄色三角标记淡入，随后闪两下
+ * 用户做出选择后，右上角会出现一条指向声音开关位置的提示。
+ * ------------------------------------------------------------------ */
+.SoundIntro__overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 1200;
+  display: flex;
+  align-items: flex-end;
+  background-color: transparent;
+  pointer-events: none;
+  visibility: hidden;
+}
+.SoundIntro__overlay[data-state='visible'] { visibility: visible; }
+
+.SoundIntro__panel {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 40px;
+  width: 100%;
+  padding: 22px 40px;
+  background-color: rgba(0, 0, 0, 0.9);
+  pointer-events: auto;
+}
+.SoundIntro__rule {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 1px;
+  background-color: rgba(255, 255, 255, 0.25);
+  transform: scaleX(0);
+  transform-origin: left center;
+}
+.SoundIntro__inner { display: contents; }
+.SoundIntro__label {
+  display: flex;
+  flex-shrink: 0;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--f-mono);
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  color: var(--c-gray-1);
+}
+/* 全站唯一的一处彩色：一个朝下的黄色小三角 */
+.SoundIntro__marker {
+  display: block;
+  width: 0;
+  height: 0;
+  border-right: 4px solid transparent;
+  border-bottom: 7px solid var(--c-accent);
+  border-left: 4px solid transparent;
+}
+.SoundIntro__text {
+  flex: 1;
+  font-family: var(--f-ui);
+  font-size: 13px;
+  line-height: 1.7;
+  letter-spacing: 0.05em;
+  color: #fff;
+}
+.SoundIntro__actions { display: flex; flex-shrink: 0; align-items: center; gap: 28px; }
+.SoundIntro__accept {
+  padding: 13px 26px;
+  font-family: var(--f-mono);
+  font-size: 12px;
+  letter-spacing: 0.05em;
+  color: #fff;
+  background-color: transparent;
+  border: 1px solid rgba(255, 255, 255, 0.5);
+  border-radius: 999px;
+  cursor: pointer;
+  transition:
+    background-color var(--t-fast) cubic-bezier(0.25, 0.46, 0.45, 0.94),
+    border-color var(--t-fast) cubic-bezier(0.25, 0.46, 0.45, 0.94),
+    color var(--t-fast) cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+.SoundIntro__accept:hover { color: #000; background-color: #fff; border-color: #fff; }
+/* 拒绝是个下划线文字链，刻意比接受按钮弱 —— 但不隐藏 */
+.SoundIntro__decline {
+  padding: 0;
+  font-family: var(--f-ui);
+  font-size: 13px;
+  letter-spacing: 0.08em;
+  color: var(--c-gray-1);
+  text-decoration: underline;
+  text-underline-offset: 4px;
+  background: transparent;
+  cursor: pointer;
+  transition: opacity var(--t-fast) cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+.SoundIntro__decline:hover { opacity: 0.6; }
+
+.SoundIntro__overlay .SoundIntro__panel {
+  opacity: 0;
+  transform: translateY(100%);
+  transition:
+    transform 0.7s cubic-bezier(0.25, 0.46, 0.45, 0.94),
+    opacity 0.7s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+.SoundIntro__overlay .SoundIntro__rule { transition: transform 0.6s 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94); }
+.SoundIntro__overlay .SoundIntro__marker { opacity: 0; transition: opacity 0.3s 1.1s linear; }
+.SoundIntro__overlay[data-state='visible'] .SoundIntro__panel { opacity: 1; transform: translateY(0); }
+.SoundIntro__overlay[data-state='visible'] .SoundIntro__rule { transform: scaleX(1); }
+.SoundIntro__overlay[data-state='visible'] .SoundIntro__marker {
+  opacity: 1;
+  animation: SoundIntro__markerBlink 0.9s 1.1s steps(1, end) 2;
+}
+@keyframes SoundIntro__markerBlink {
+  0% { opacity: 1; }
+  50% { opacity: 0.15; }
+  to { opacity: 1; }
+}
+
+/* 选择之后，右上角浮出一条指向声音开关的提示 */
+.SoundIntro__hint {
+  position: fixed;
+  top: 0;
+  right: 0;
+  z-index: 1100;
+  max-width: 300px;
+  padding: 12px 14px;
+  background-color: rgba(0, 0, 0, 0.85);
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(-6px);
+  pointer-events: none;
+  transition:
+    opacity var(--t-base) cubic-bezier(0.25, 0.46, 0.45, 0.94),
+    visibility var(--t-base) cubic-bezier(0.25, 0.46, 0.45, 0.94),
+    transform var(--t-base) cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+.SoundIntro__hint[data-state='visible'] { opacity: 1; visibility: visible; transform: translateY(0); }
+.SoundIntro__hint_line { position: absolute; top: -12px; right: 20px; width: 1px; height: 12px; background-color: var(--c-accent); }
+.SoundIntro__hint_text { font-family: var(--f-ui); font-size: 11px; line-height: 1.6; letter-spacing: 0.05em; color: #fff; }
+
+.Loading__logo svg path { stroke: #bbb !important; }
+
+/* ⚠️ 这里曾经是 `.TopPageOutro__logo svg { width:100%; height:auto }`。
+   它是旧版只放一个 M 时留下的，选择器权重（0,1,1）压过 .Outro__mark（0,1,0），
+   把字标 SVG 撑成 1100×1100 的正方形 —— 于是它和构造图纸虽然共用同一张画布、
+   同一套坐标，slice 铺排出来的比例却不一样，线全对不上字母。 */
+/* outro 只属于首页；其它页面把它整块折叠掉，不占高度 */
+body[data-page]:not([data-page='top']) .TopPageOutro__wrapper {
+  visibility: hidden;
+  opacity: 0;
+  pointer-events: none;
+  height: 0;
+  overflow: hidden;
+}
+
+.Footer__bottom { padding: 0 14px; }
+.Footer__social_link {
+  color: #fff;
+  text-decoration: none;
+  font-size: 16px;
+  letter-spacing: 0.02em;
+  transition: opacity var(--t-fast) ease;
+}
+.Footer__social_link:hover { opacity: 0.7; }
+.Footer__logo img { width: 100%; }
+
+/* ================= SlotButton =================
+ * 老虎机式文字替换。备份文字压在 top:100%（正下方），hover 时整个 wrapper
+ * 上移一行把它顶上来，靠按钮的 overflow:hidden 裁掉出框那行。
+ * 缺了 position:absolute 就会变成上下两行同时可见。
+ * ------------------------------------------------------------------ */
+.SlotButton__button {
+  position: relative;
+  display: inline-block;
+  overflow: hidden;
+  color: inherit;
+  text-decoration: none;
+  transition:
+    background-color 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94),
+    border-color 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+.SlotButton__text_wrapper {
+  position: relative;
+  display: block;
+  transition: transform 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+.SlotButton__text {
+  display: block;
+  color: inherit;
+  transition:
+    color 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94),
+    opacity 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+.SlotButton__text_hover {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  width: 100%;
+  display: block;
+  color: #000;
+  opacity: 0;
+  transition: opacity 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+.SlotButton__button:hover .SlotButton__text_wrapper { transform: translateY(-100%); }
+.SlotButton__button:hover .SlotButton__text { opacity: 0; }
+.SlotButton__button:hover .SlotButton__text_hover { opacity: 1; }
+
+/* ---- 开场构造线 ----
+ * 线宽、颜色、虚线间距全部取自原站 /common/loading/bg/data.json 的字面值
+ * （画布 2304 见方）。这里刻意**不用** vector-effect:non-scaling-stroke ——
+ * 原站的 Lottie 就是整体缩放的，线宽随画布一起放大；斜线只有 0.5 个画布单位，
+ * 折合屏幕上约 0.33px，那种"发丝感"正是靠亚像素描边得来的，钉死 1px 反而变粗。
+ *
+ * 圆与扫光在原站是虚线（dash 4 / 8 / 3 画布单位 ≈ 屏幕 1.3~2.7px）。
+ * 这个周期比一个像素还短，肉眼读到的是一条半透明细线而不是点线，
+ * 所以这里用整数描边 + 55% 不透明度等效实现 —— 既一致，又不必逐帧拼
+ * 上千段 dash 数组去做"边点边长"的推进。
+ */
+.Loading__svg { width: 100%; height: 100%; display: block; }
+.Loading__svg line,
+.Loading__svg circle,
+.Loading__svg path { stroke-linecap: butt; fill: none; }
+
+.Loading__svg .cons-rule   { stroke: #919191; stroke-width: 1; }     /* yoko  */
+.Loading__svg .cons-axis   { stroke: #919191; stroke-width: 1; }     /* tate  */
+.Loading__svg .cons-axis.cons-thin { stroke-width: 0.6; }
+.Loading__svg .cons-edge   { stroke: #919191; stroke-width: 0.5; }   /* 斜边  */
+.Loading__svg .cons-edge.cons-thin { opacity: 0.72; }                /* 旁线略退 */
+.Loading__svg .cons-circle   { stroke: #535353; stroke-width: 2; opacity: 0.55; }
+.Loading__svg .cons-circle_s { stroke-width: 3; }
+.Loading__svg .cons-streak { stroke: #919191; stroke-width: 1; opacity: 0.55; }
+/* 字标描边。原站 logo lottie 是 stroke w=1 × 图层缩放 203%，即 2.03 用户单位，
+   在 80% 宽的容器里 slice 铺开后落到 2.71 设备像素 —— 太细，按用户要求加粗。
+   3.0 用户单位 × (1536/2304) × dpr2 = 4.0 设备像素，与三维字标描边同一重量
+   （见 logo-geometry.js 的 SHELL）。改这里要同步 gl/loading-texture.js。 */
+.Loading__logo_svg .cons-logo { stroke: #bbb; stroke-width: 3; }

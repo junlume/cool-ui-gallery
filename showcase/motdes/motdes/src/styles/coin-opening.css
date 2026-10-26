@@ -1,0 +1,152 @@
+/* 硬币开场：0 → 100 随视频时间推进，甩手时将舞台交给“环绕”。 */
+/* Lenis 解锁时原生滚动条会挤窄画布。首页已有滚动指示器，始终保留全宽。 */
+html:has(> body[data-coin-opening='true']) {
+  scrollbar-width: none;
+}
+html:has(> body[data-coin-opening='true'])::-webkit-scrollbar {
+  width: 0;
+  height: 0;
+}
+
+[data-coin-opening='true'] #loading-overlay,
+[data-coin-opening='true'] [data-top_section='kv'],
+[data-coin-opening='true'] [data-top_section='works_intro'] {
+  display: none;
+}
+
+.CoinOpening {
+  position: fixed;
+  inset: 0;
+  z-index: 10000;
+  background: #000;
+  isolation: isolate;
+}
+.CoinOpening__video {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  /* 与 composite.js 人物背景一致：完整构图缩至 92%，整体上移 5vh。 */
+  object-fit: contain;
+  object-position: center;
+  transform: translateY(-5%) scale(0.92);
+  transition: opacity 80ms ease-out;
+}
+.CoinOpening__progress {
+  position: absolute;
+  left: 50%;
+  bottom: max(64px, env(safe-area-inset-bottom));
+  transform: translateX(-50%);
+  color: #fff;
+  font-family: 'PingFang SC', 'PingFang TC', -apple-system, BlinkMacSystemFont, sans-serif;
+  font-size: 20px;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+  line-height: 1;
+  letter-spacing: 0.01em;
+  text-shadow: 0 1px 10px rgb(0 0 0 / 35%);
+  transition: opacity 220ms ease-out, transform 220ms ease-out;
+}
+.CoinOpening__label { margin-right: 10px; }
+.CoinOpening__percent { margin-left: 2px; font-size: 0.78em; }
+.CoinOpening__skip {
+  position: absolute;
+  right: max(26px, env(safe-area-inset-right));
+  bottom: max(25px, env(safe-area-inset-bottom));
+  padding: 8px;
+  color: rgb(255 255 255 / 54%);
+  font-family: 'PingFang SC', -apple-system, sans-serif;
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  transition: opacity 180ms ease;
+}
+.CoinOpening__skip:hover { color: white; }
+.CoinOpening__skip:disabled { opacity: 0; pointer-events: none; }
+.CoinOpening__texture {
+  position: fixed;
+  left: -4px;
+  top: -4px;
+  width: 1px;
+  height: 1px;
+  opacity: 0;
+  pointer-events: none;
+}
+.CoinOpening[data-revealing] { background: transparent; pointer-events: none; }
+.CoinOpening[data-revealing] .CoinOpening__video,
+.CoinOpening[data-revealing] .CoinOpening__skip { opacity: 0; }
+.CoinOpening[data-progress-hidden] .CoinOpening__progress {
+  opacity: 0;
+  transform: translate(-50%, -5px);
+}
+.CoinOpening[hidden] { display: none; }
+
+/* A small persistent music control also works above the opening overlay. */
+.SiteMusic {
+  position: fixed;
+  z-index: 10002;
+  right: max(26px, env(safe-area-inset-right));
+  bottom: max(112px, calc(env(safe-area-inset-bottom) + 80px));
+  min-width: 72px;
+  min-height: 44px;
+  padding: 10px 16px;
+  border: 1px solid rgb(255 255 255 / 25%);
+  border-radius: 100px;
+  background: rgb(20 20 20 / 65%);
+  color: rgb(255 255 255 / 85%);
+  font: 11px/1.4 'PingFang SC', -apple-system, sans-serif;
+  letter-spacing: .06em;
+  cursor: pointer;
+}
+.SiteMusic:hover { background: rgb(20 20 20 / 85%); color: #fff; }
+.SiteMusic:is([data-state='idle'], [data-state='blocked'], [data-state='off'], [data-state='error']) {
+  min-width: 132px;
+  background: #fff;
+  color: #171717;
+  border-color: rgb(0 0 0 / 12%);
+  box-shadow: 0 4px 20px rgb(0 0 0 / 10%);
+  font-size: 13px;
+}
+.SiteMusic:focus-visible { outline: 2px solid #808080; outline-offset: 3px; }
+.SiteMusic[hidden] { display: none; }
+@media (max-width: 768px) { .SiteMusic { right: max(12px, env(safe-area-inset-right)); } }
+
+/* 导航和首件作品跟随甩手淡入，加载期间保留解码和GL预热。 */
+[data-coin-opening='true'] .Header__container,
+[data-coin-opening='true'] .HamburgerIcon__hamburger {
+  transition: opacity 420ms cubic-bezier(0.16, 1, 0.3, 1), transform 420ms cubic-bezier(0.16, 1, 0.3, 1), color 500ms ease;
+}
+[data-coin-state='loading'] .Header__container,
+[data-coin-state='loading'] .HamburgerIcon__hamburger,
+[data-coin-state='loading'] .TopScrollIndicator__top_scroll_indicator,
+[data-coin-state='revealing'] .TopScrollIndicator__top_scroll_indicator {
+  opacity: 0;
+  pointer-events: none;
+}
+[data-coin-state='loading'] .Header__container *,
+[data-coin-state='loading'] .HamburgerIcon__hamburger {
+  pointer-events: none;
+}
+[data-coin-opening='true'][data-gl_loading_end='false'] .Layout__inner { opacity: 0; }
+[data-coin-state='revealing'] .Layout__inner { transition: opacity 240ms ease-out; }
+.CoinOpening__scroll {
+  position: fixed;
+  z-index: 100;
+  bottom: max(26px, env(safe-area-inset-bottom));
+  left: 50%;
+  transform: translateX(-50%);
+  color: rgb(255 255 255 / 64%);
+  font-family: 'PingFang SC', -apple-system, sans-serif;
+  font-size: 10px;
+  letter-spacing: 0.14em;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 500ms ease;
+}
+.CoinOpening__scroll span { display: inline-block; margin-left: 12px; }
+[data-coin-state='ready'][data-coin-at-top='true'] .CoinOpening__scroll { opacity: 1; }
+@media (max-width: 768px) {
+  .CoinOpening__progress { font-size: 18px; bottom: max(56px, env(safe-area-inset-bottom)); }
+  .CoinOpening__skip { right: 12px; font-size: 10px; }
+  .CoinOpening__scroll { font-size: 9px; }
+}

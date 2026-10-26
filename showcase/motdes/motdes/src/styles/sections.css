@@ -1,0 +1,800 @@
+/* 首页各区段。数值取自 alche.studio 产物 CSS；中文字距按 --ls-cjk-* 收紧。 */
+
+/* ================= 左侧滚动指示器 ================= */
+.TopScrollIndicator__top_scroll_indicator {
+  position: fixed;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 100;
+  padding-left: 24px;
+  opacity: 1;
+  transition: opacity var(--t-fast) ease;
+  /* 白场上自动翻黑，不要在 JS 里再写翻色 */
+  mix-blend-mode: difference;
+}
+@media not screen and (min-width: 769px) {
+  .TopScrollIndicator__top_scroll_indicator { display: none; }
+}
+[data-current_section='kv'] .TopScrollIndicator__top_scroll_indicator,
+[data-current_section='stellla'] .TopScrollIndicator__top_scroll_indicator,
+[data-current_section='footer'] .TopScrollIndicator__top_scroll_indicator {
+  opacity: 0;
+  pointer-events: none;
+}
+.TopScrollIndicator__section_list { display: flex; flex-direction: column; gap: 21.6px; }
+.TopScrollIndicator__section_item { display: flex; flex-direction: column; gap: 21.6px; transition: all var(--t-fast) ease; }
+.TopScrollIndicator__section_item .TopScrollIndicator__section_label { opacity: 0; }
+.TopScrollIndicator__section_item[data-active='true'] .TopScrollIndicator__section_line { background: var(--c-fg); width: 20px; }
+.TopScrollIndicator__section_item[data-active='true'] .TopScrollIndicator__section_label { color: var(--c-fg); opacity: 1; }
+.TopScrollIndicator__section_main { display: flex; align-items: center; gap: 16px; cursor: pointer; }
+.TopScrollIndicator__section_line {
+  position: relative;
+  width: 16px;
+  height: 1px;
+  background-color: var(--c-fg);
+  transition: all var(--t-fast) ease;
+  flex-shrink: 0;
+}
+.TopScrollIndicator__section_label {
+  position: absolute;
+  left: calc(100% + 8px);
+  top: 0;
+  transform: translateY(-50%);
+  font-family: var(--f-mono);
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: var(--ls-mono);
+  color: rgba(255, 255, 255, 0.6);
+  transition: all var(--t-fast) ease;
+  white-space: nowrap;
+}
+.TopScrollIndicator__subsection_list { display: flex; flex-direction: column; gap: 18px; }
+.TopScrollIndicator__subsection_item { display: flex; align-items: center; gap: 18px; cursor: pointer; transition: all var(--t-fast) ease; }
+.TopScrollIndicator__subsection_item:hover { opacity: 0.6; }
+.TopScrollIndicator__subsection_line {
+  width: 4px;
+  height: 1px;
+  background: var(--c-gray-3);
+  transition: all var(--t-fast) ease;
+  flex-shrink: 0;
+}
+.TopScrollIndicator__subsection_item[data-active='true'] .TopScrollIndicator__subsection_line { width: 12px; }
+
+/* ================= News =================
+ * 固定在右下角的小新闻栏，只在 KV 段出现。
+ * 注意分隔线用的是 rgba(0,0,0,.1) —— 黑底上几乎看不见，是原站从浅色设计
+ * 沿用下来的痕迹。照搬，因为它确实让条目之间留出了一丝呼吸。
+ * ------------------------------------------------------------------ */
+.News__newsArea {
+  position: fixed;
+  bottom: 20px;
+  right: 27px;
+  max-width: 400px;
+  padding: 16px;
+  font-family: var(--f-ui);
+  z-index: 100;
+  color: var(--c-gray-1);
+  opacity: 0;
+  transition: opacity var(--t-base);
+  pointer-events: none;
+}
+body[data-current_section='kv'] .News__newsArea { opacity: 1; transition: opacity var(--t-base); pointer-events: auto; }
+
+.News__newsTitle {
+  font-size: 14px;
+  font-weight: 700;
+  margin-bottom: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  padding-bottom: 4px;
+}
+.News__newsList { display: flex; flex-direction: column; gap: 12px; max-height: 300px; overflow-y: auto; }
+.News__newsList::-webkit-scrollbar { width: 4px; }
+.News__newsList::-webkit-scrollbar-track { background: transparent; }
+.News__newsList::-webkit-scrollbar-thumb { background: rgba(0, 0, 0, 0.2); border-radius: 2px; }
+
+.News__newsItem {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+}
+.News__newsItem:last-child { border-bottom: none; padding-bottom: 0; }
+.News__newsDate { font-size: 11px; font-weight: 500; font-family: var(--f-code); }
+.News__newsContent {
+  line-height: 1.4;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.News__newsLink {
+  font-size: 13px;
+  text-decoration: none;
+  font-weight: 500;
+  line-height: 1.4;
+  display: block;
+  transition: color 0.2s ease, opacity 0.4s ease;
+  color: var(--c-fg);
+}
+.News__newsLink:hover { opacity: 0.6; }
+
+@media not screen and (min-width: 769px) {
+  .News__newsArea { display: none; }
+}
+
+/* ================= KV ================= */
+.KV__container { position: relative; width: 100%; height: 100svh; margin-bottom: 100px; pointer-events: none; }
+body[data-current_section='kv'] .KV__container { pointer-events: auto; }
+.KV__inner { position: relative; width: 100%; height: 100%; }
+.KV__scrollText {
+  position: fixed;
+  left: 50%;
+  bottom: 40px;
+  transform: translateX(-50%);
+  font-family: var(--f-code);
+  font-size: 12px;
+  letter-spacing: var(--ls-mono);
+  color: rgba(255, 255, 255, 0.8);
+  pointer-events: none;
+  z-index: 100;
+  opacity: 0;
+  transition: opacity var(--t-fast) ease-in-out;
+; font-weight: 400; writing-mode: horizontal-tb; text-orientation: unset; }
+body[data-current_section='kv'] .KV__scrollText { opacity: 1; }
+.KV__scrollText span { display: block; white-space: nowrap; }
+@media only screen and (min-width: 769px) {
+  .KV__scrollText { display: none; }
+}
+@media not screen and (min-width: 769px) {
+  .KV__scrollText {
+    left: auto;
+    right: 15px;
+    bottom: 30px;
+    transform: none;
+    writing-mode: vertical-rl;
+    font-size: 10px;
+  }
+}
+
+/* ================= PageTop 撑高块 ================= */
+.PageTop__worksIntro { height: 20vh; }
+.PageTop__worksOutro { height: 150lvh; }
+.PageTop__visionOut,
+.PageTop__stellla { height: 150lvh; }
+.PageTop__stelllaContent { position: absolute; width: 100%; height: 250lvh; bottom: 0; }
+.PageTop__stelllaContent_inner { position: sticky; left: 0; top: 0; width: 100%; height: 100lvh; overflow: hidden; }
+
+/* ================= WORKS ================= */
+.Works__container { position: relative; width: 100%; opacity: 0; pointer-events: none; transition: opacity var(--t-base) ease; }
+[data-current_section='works'] .Works__container,
+[data-current_section='works_outro'] .Works__container { opacity: 1; pointer-events: auto; }
+.Works__content { position: absolute; width: 100%; height: 100%; left: 0; top: 0; z-index: 1; }
+.Works__content_inner {
+  position: fixed;
+  top: 0;
+  width: 100%;
+  height: 100dvh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  font-size: max(30px, 3vw);
+}
+.Works__list { position: relative; flex: 1; }
+.Works__item {
+  position: absolute;
+  width: var(--works-item-width);
+  left: var(--works-item-left);
+  bottom: var(--works-item-bottom);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  pointer-events: auto;
+; justify-content: center; }
+.Works__item_info { display: flex; align-items: flex-end; gap: 10px; margin-bottom: 8px; }
+.Works__item_date {
+  font-family: var(--f-code);
+  font-size: 12px;
+  font-weight: 300;
+  letter-spacing: var(--ls-date);
+  white-space: pre;
+; text-align: left; }
+.Works__item_impression { display: flex; align-items: flex-end; }
+.Works__item_impression_title {
+  font-family: var(--f-ui);
+  font-size: 12px;
+  letter-spacing: 0.05em;
+  border-radius: 0.3em;
+  line-height: 1.3em;
+  padding: 0.3em 0.4em 0.2em;
+  background: var(--c-accent-bg);
+  color: var(--c-accent);
+  white-space: nowrap;
+  margin-right: 5px;
+; font-weight: 400; word-break: break-word; }
+.Works__item_title {
+  font-family: var(--f-display);
+  font-weight: 500;
+  font-size: 40px;
+  margin-bottom: 10px;
+  line-height: 1em;
+  word-break: break-word;
+}
+.Works__item_title_link { display: inline-block; transition: opacity var(--t-fast) ease; }
+.Works__item_title_link:hover { opacity: 0.8; }
+.Works__item_title_ja {
+  font-size: 14px;
+  font-family: var(--f-cjk);
+  margin-bottom: 14px;
+  letter-spacing: var(--ls-cjk-loose);
+}
+.Works__item_categoryList { display: flex; flex-wrap: wrap; gap: 0.5em; font-size: 12px; ; letter-spacing: 0.15em; column-gap: 0.5em; row-gap: 0.5em; }
+.Works__item_categoryList_item {
+  font-family: var(--f-code);
+  border: 1px solid var(--c-gray-5);
+  border-radius: 0.3em;
+  padding: 0.2em 0.8em;
+  line-height: 1.4em;
+  letter-spacing: 0.04em;
+}
+.Works__scroll { width: 100%; }
+.Works__scroll_item { position: relative; width: 100%; height: 100lvh; overflow: hidden; }
+.Works__scroll_item_thumb { position: absolute; inset: 0; }
+/* 基态隐藏，只在 works 段（及 works_outro 尚未滑出视口时）点亮 —— 与原站一致 */
+.Works__more {
+  position: fixed;
+  right: 3%;
+  bottom: 10vh;
+  z-index: 2;
+  font-size: 16px;
+  letter-spacing: 0.05em;
+  padding-bottom: 4px;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s ease;
+}
+[data-current_section='works'] .Works__more,
+[data-current_section='works_outro'][data-works-outro-above-viewport='false'] .Works__more {
+  opacity: 1;
+  pointer-events: auto;
+}
+[data-current_section='works'] .Works__more::after { transform: scaleX(0); }
+.Works__more_link {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--f-mono);
+  font-size: 12px;
+  letter-spacing: var(--ls-mono);
+}
+
+/* ================= MISSION / VISION ================= */
+.MissionVision__container {
+  position: fixed;
+  width: 100%;
+  height: 100dvh;
+  left: 0;
+  top: 0;
+  font-weight: 600;
+  overflow: hidden;
+  pointer-events: none;
+}
+@media not screen and (min-width: 769px) {
+  .MissionVision__container { position: relative; height: unset; }
+}
+@media only screen and (min-width: 769px) {
+  /* 遮罩自下而上推进，--mask-height 由 MissionController 逐帧写入 */
+  .MissionVision__container[data-mission-container] {
+    mask: linear-gradient(to top, black var(--mask-height, 0%), transparent calc(var(--mask-height, 0%) + var(--mask-fade, 5%)));
+    -webkit-mask: linear-gradient(to top, black var(--mask-height, 0%), transparent calc(var(--mask-height, 0%) + var(--mask-fade, 5%)));
+  }
+}
+body[data-current_section='mission'] .MissionVision__container[data-mission-container],
+body[data-current_section='vision'] .MissionVision__container[data-vision-container] {
+  pointer-events: auto;
+}
+.MissionVision__missionContent { height: 160vh; }
+.MissionVision__visionContent { height: 200vh; }
+@media not screen and (min-width: 769px) {
+  .MissionVision__missionContent,
+  .MissionVision__visionContent { height: 100%; }
+}
+.MissionVision__inner { position: relative; width: 80%; height: 100%; margin: 0 auto; padding-top: 17vh; }
+@media not screen and (min-width: 769px) {
+  .MissionVision__inner { width: 90%; padding-top: 40px; }
+  [data-vision-container] .MissionVision__inner { padding-top: 0; }
+}
+.MissionVision__ttl { transform: translateZ(0); }
+/* 左侧三行作品集标题。保留原单路径描边，右侧中文沿用原来的流式占位。 */
+.MissionVision__portfolio_title { width: 27.5%; height: 4.9vw; }
+.MissionVision__portfolio_title,
+[data-vision-text_en] { opacity: 0; }
+.MissionVision__ttl svg { display: block; stroke-width: 1px; width: 100%; height: auto; overflow: visible; }
+.MissionVision__ttl svg path { stroke: var(--c-gray-7) !important; }
+.MissionVision__text {
+  margin-top: 95px;
+  line-height: 1.7em;
+  /* 原站 4vmin 是为日文假名调的；中文字身框更满，降到 3.4vmin */
+  font-size: 3.4vmin;
+  letter-spacing: var(--ls-cjk-tight);
+  font-weight: 700;
+  will-change: transform;
+  color: var(--c-fg);
+}
+@media not screen and (min-width: 769px) {
+  .MissionVision__text { font-size: 5.2vmin; margin-top: 90px; }
+}
+[data-vision-container] .MissionVision__text { text-align: right; }
+@media not screen and (min-width: 769px) {
+  [data-vision-container] .MissionVision__text { margin-top: 95px; text-align: left; }
+}
+.MissionVision__line { position: relative; margin-bottom: 0.1em; }
+/* 黑色马克笔：background-size 由 0% 推到 100%，白字才被"显影" */
+.MissionVision__marker {
+  display: inline;
+  background: linear-gradient(transparent 0%, #000 0.1%);
+  background-repeat: no-repeat;
+  background-size: 0% 100%;
+}
+.MissionVision__text_en {
+  transform: translateZ(0);
+  position: absolute;
+  left: 0;
+  top: 60vh;
+  margin-top: 50px;
+  font-family: var(--f-display);
+  font-weight: 200;
+  font-size: 1.5vmin;
+  line-height: 1.3em;
+  letter-spacing: var(--ls-mono);
+  color: var(--c-gray-6);
+; margin-right: auto; }
+[data-vision-container] .MissionVision__text_en { max-width: 50vmin; }
+@media not screen and (min-width: 769px) {
+  .MissionVision__text_en { position: relative; font-size: 12px; margin-top: 40px; top: unset; }
+}
+
+/* 支持字复用英文容器的滚动淡入/模糊退场，不加入中文马克笔的行时间轴。 */
+[data-vision-container] .MissionVision__portfolio_intro {
+  top: calc(17vh + 4.9vw + clamp(12px, 2vh, 28px));
+  width: 27.5%;
+  max-width: none;
+  margin-top: 0;
+  letter-spacing: normal;
+}
+.MissionVision__portfolio_statement {
+  margin: 0;
+  color: #222;
+  font-family: var(--f-display);
+  font-size: clamp(30px, 4.3vw, 100px);
+  font-weight: 500;
+  line-height: 1.08;
+  letter-spacing: -0.035em;
+}
+.MissionVision__portfolio_statement > span {
+  display: block;
+  white-space: nowrap;
+  overflow: hidden;
+  perspective: 600px;
+  padding-block: 0.1em;
+  margin-block: -0.1em;
+}
+.MissionVision__portfolio_char { display: inline-block; transform-origin: 50% 100%; }
+.MissionVision__portfolio_index {
+  position: relative;
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 8px 12px;
+  margin-top: clamp(24px, 4vh, 46px);
+  padding-top: 14px;
+  color: var(--c-gray-6);
+  font-family: var(--f-mono);
+  font-size: 10px;
+  font-weight: 400;
+  line-height: 1.4;
+  letter-spacing: 0.04em;
+}
+.MissionVision__portfolio_rule {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 1px;
+  background: rgb(0 0 0 / 22%);
+  transform-origin: left center;
+}
+.MissionVision__portfolio_caption {
+  margin: 24px 0 0;
+  font-size: clamp(12px, 1.1vw, 16px);
+  font-weight: 300;
+  line-height: 1.5;
+  letter-spacing: 0.015em;
+}
+.MissionVision__portfolio_word_mask { display: inline-block; overflow: hidden; vertical-align: bottom; }
+.MissionVision__portfolio_word_mask > span { display: inline-block; }
+@media not screen and (min-width: 769px) {
+  [data-vision-container] .MissionVision__inner {
+    display: grid;
+    align-content: start;
+  }
+  .MissionVision__portfolio_title { width: 92%; max-width: 520px; height: auto; }
+  [data-vision-container] .MissionVision__portfolio_intro {
+    position: relative;
+    top: auto;
+    width: 100%;
+    margin-top: 24px;
+    order: 1;
+  }
+  .MissionVision__portfolio_statement { font-size: clamp(34px, 9vw, 64px); }
+  .MissionVision__portfolio_index { margin-top: 24px; padding-top: 12px; }
+  .MissionVision__portfolio_caption { margin-top: 18px; font-size: 12px; }
+  [data-vision-container] .MissionVision__text { order: 2; margin-top: 36px; }
+}
+
+/* ================= SERVICE =================
+ * 字号是一套 em 体系：容器定 max(70px, 5vw)，标题 .6em、中文描述 .1818em
+ * （即 1/5.5）全部相对它缩放。改容器字号，整块跟着等比走 —— 不要把子元素
+ * 改成 px，那会打断这套关系。
+ * ------------------------------------------------------------------ */
+.Service__container {
+  position: relative;
+  width: 100%;
+  opacity: 0;
+  transition: opacity var(--t-base);
+  pointer-events: none;
+}
+.Service__container[data-presenting='true'] { pointer-events: auto; }
+
+.Service__content { position: fixed; width: 100%; height: 100%; left: 0; top: 0; z-index: 1; }
+.Service__content_inner {
+  position: sticky;
+  top: 0;
+  width: 90%;
+  height: 100dvh;
+  font-size: max(70px, 5vw);
+  padding-top: 10vh;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.Service__title { font-family: var(--f-display); font-weight: 500; letter-spacing: 0.02em; font-size: 1em; }
+.Service__list { position: relative; flex: 1; }
+
+.Service__item {
+  position: absolute;
+  visibility: hidden;
+  opacity: 0;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-end;
+  padding-bottom: 10dvh;
+  text-align: right;
+  pointer-events: none;
+  overflow: visible;
+  top: 30%;
+}
+
+/* 整块的点击热区是固定定位的，覆盖左侧大半屏 —— 不是贴着文字的小链接 */
+.Service__item_link {
+  position: fixed;
+  top: 50%;
+  left: 13%;
+  z-index: 20;
+  width: 55%;
+  height: 70%;
+  padding: 20px;
+  transform: translateY(-50%);
+}
+
+.Service__item_icon {
+  position: absolute;
+  right: 0;
+  bottom: calc(100% + 30px);
+  font-family: var(--f-cjk);
+  font-size: clamp(22px, 1.8vw, 30px);
+  font-weight: 800;
+  line-height: 1.15;
+  letter-spacing: 0.02em;
+  white-space: nowrap;
+}
+.Service__item_thumb { position: absolute; top: 0; left: 0; width: 100%; height: 100%; }
+
+.Service__item_title {
+  font-family: var(--f-cjk);
+  font-weight: 300;
+  font-size: 0.6em;
+  margin-top: 1%;
+  text-shadow: 0 0 10px #000;   /* 压在视频/图案上时保证可读 */
+}
+.Service__item_description {
+  font-family: var(--f-cjk);
+  margin-top: 2%;
+  padding-left: 0;
+  width: 35%;
+  text-align: right;
+  font-size: 0.1818181818em;
+  letter-spacing: var(--ls-cjk-tight);
+}
+.Service__item_description_en {
+  padding-left: 0;
+  margin-top: 40px;
+  font-family: var(--f-display);
+  font-weight: 200;
+  font-size: 12px;
+  line-height: 1.3em;
+  letter-spacing: 0.01em;
+  color: var(--c-gray-4);
+  width: 18em;
+  text-align: right;
+  white-space: pre-wrap;
+}
+
+.Service__scroll { width: 100%; }
+.Service__scroll_item { position: relative; width: 100%; height: 170lvh; }
+
+@media not screen and (min-width: 769px) {
+  .Service__content_inner { padding-top: 20%; font-size: 50px; }
+  .Service__item { top: unset; bottom: 2dvh; height: unset; padding-bottom: 0; position: absolute; }
+  .Service__item_link { width: 70%; height: 35%; top: 28%; left: 50%; transform: translate(-50%); }
+  .Service__item_icon { position: fixed; right: 8vw; top: 20vh; font-size: 18px; z-index: 999; bottom: unset; }
+  .Service__item_title { font-size: 0.7em; }
+  .Service__item_description { font-size: 0.24em; line-height: 1.6; width: 100%; padding-left: 0; }
+  .Service__item_description_en { margin-top: 10px; font-size: 0.24em; line-height: 1.4; width: 100%; padding-left: 0; }
+}
+
+/* 原窗口展开到中央；暗部保留可见的模糊页面，原生 dialog 限制焦点。 */
+.VideoModal {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100dvh;
+  max-width: none;
+  max-height: none;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: #fff;
+  overscroll-behavior: contain;
+  overflow: hidden;
+}
+.VideoModal[open] { display: block; }
+.VideoModal::backdrop { background: transparent; }
+.VideoModal__shade {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgb(3 5 9 / 42%), rgb(3 5 9 / 62%));
+  -webkit-backdrop-filter: blur(14px);
+  backdrop-filter: blur(14px);
+  opacity: 0;
+  pointer-events: none;
+}
+.VideoModal__player {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 1;
+  transform-origin: 0 0;
+  will-change: transform;
+  overflow: hidden;
+  border-radius: clamp(10px, 1.5vw, 20px);
+  box-shadow: 0 24px 100px rgb(0 0 0 / 35%);
+}
+.VideoModal__video {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  border-radius: inherit;
+  background: #000;
+}
+.VideoModal__preview { position: absolute; inset: 0; width: 100%; height: 100%; border-radius: inherit; pointer-events: none; }
+.VideoModal__close {
+  position: absolute;
+  top: max(20px, env(safe-area-inset-top));
+  right: max(24px, env(safe-area-inset-right));
+  z-index: 2;
+  display: grid;
+  place-items: center;
+  padding: 0;
+  box-sizing: border-box;
+  width: 42px;
+  height: 42px;
+  border: 1px solid rgb(255 255 255 / 28%);
+  border-radius: 50%;
+  color: #fff;
+  background: rgb(8 10 14 / 28%);
+  line-height: 0;
+  opacity: 0;
+}
+.VideoModal__close svg { display: block; width: 20px; height: 20px; fill: none; stroke: currentColor; stroke-width: 1.5; stroke-linecap: round; }
+.VideoModal__close:hover { background: rgb(255 255 255 / 12%); }
+@media (max-width: 768px) {
+  .VideoModal__close { top: max(16px, env(safe-area-inset-top)); right: max(16px, env(safe-area-inset-right)); }
+}
+
+/* ================= stellla =================
+ * 取景框：四角十字 + 四条边线。--progress 由控制器写入，
+ * --padding 从 −100px 走到 +100px，也就是框从画面外收进来。
+ * ------------------------------------------------------------------ */
+.Stellla__container { position: absolute; width: 100%; height: 100%; left: 0; top: 0; pointer-events: none; }
+body[data-current_section='stellla'] .Stellla__container { pointer-events: auto; }
+/* 半透明黑幕，把身后的 service 视频压暗，让白色取景框和文字浮出来 */
+.Stellla__container::before {
+  content: '';
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  left: 0;
+  top: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+}
+
+.Stellla__frame_container { pointer-events: none; position: absolute; width: 100%; height: 100dvh; left: 0; top: 0; }
+.Stellla__frame {
+  position: absolute;
+  --progress: 0;
+  --padding: calc(-100px + var(--progress) * (200px));
+  width: calc(100% - var(--padding));
+  height: calc(100% - var(--padding));
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.Stellla__inner { position: relative; width: 100%; height: 100dvh; }
+.Stellla__cross { position: absolute; width: 100%; height: 100%; left: 0; top: 0; }
+.Stellla__cross_item { position: absolute; width: 25px; height: 25px; }
+.Stellla__cross_item::before,
+.Stellla__cross_item::after {
+  position: absolute;
+  display: block;
+  content: '';
+  width: 100%;
+  height: 2px;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  background-color: #fff;
+}
+.Stellla__cross_item::after { transform: translate(-50%, -50%) rotate(90deg); }
+.Stellla__cross_item:nth-child(1) { right: 0; top: 0; }
+.Stellla__cross_item:nth-child(2) { left: 0; bottom: 0; }
+.Stellla__cross_item:nth-child(3) { right: 0; bottom: 0; }
+
+.Stellla__rect { position: absolute; width: 100%; height: 100%; padding: 12.5px; }
+.Stellla__rect_inner { position: relative; width: 100%; height: 100%; }
+.Stellla__rect_line { position: absolute; background-color: var(--c-gray-3); }
+.Stellla__rect_line[data-line='top'] { top: 0; left: 20px; right: 20px; height: 1px; }
+.Stellla__rect_line[data-line='right'] { top: 20px; bottom: 20px; right: 0; width: 1px; }
+.Stellla__rect_line[data-line='bottom'] { bottom: 0; left: 20px; right: 20px; height: 1px; }
+.Stellla__rect_line[data-line='left'] { top: 20px; bottom: 20px; left: 0; width: 1px; }
+
+.Stellla__contentWrap {
+  position: absolute;
+  width: calc(100% - 100px);
+  height: calc(100% - 100px);
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+}
+.Stellla__content { width: 90%; height: 100%; pointer-events: auto; display: flex; align-items: center; margin: 0 auto; }
+.Stellla__main { width: 100%; padding-left: 4%; margin-right: auto; filter: drop-shadow(0 0 10px rgba(0, 0, 0, 0.3)); }
+.Stellla__main_logo { width: 61.9047619048%; margin-bottom: 3.2380952381%; }
+.Stellla__main_logo_link { display: flex; align-items: center; justify-content: space-between; }
+.Stellla__main_logo_img { width: 76.9230769231%; }
+.Stellla__main_logo_icon { width: 12.3076923077%; transform: translateY(80%); }
+.Stellla__main_logo_icon svg { width: 100%; height: auto; }
+.Stellla__case_heading { display: flex; flex-direction: column; gap: 18px; font-family: var(--f-cjk); }
+.Stellla__case_badge { font-size: clamp(16px, 1.6vw, 24px); font-weight: 800; letter-spacing: 0.04em; }
+.Stellla__case_title { font-size: clamp(40px, 6.5vw, 96px); font-weight: 500; line-height: 1.1; white-space: nowrap; }
+.Stellla__main_text {
+  position: relative;
+  font-family: var(--f-ui);
+  font-weight: 500;
+  letter-spacing: var(--ls-cjk-tight);
+  line-height: 1.8;
+}
+.Stellla__main_text > p { max-width: 42em; }
+.Stellla__en {
+  position: absolute;
+  font-size: 12px;
+  font-family: var(--f-display);
+  color: var(--c-gray-2);
+  margin-top: auto;
+  margin-bottom: 50px;
+  letter-spacing: 0.01em;
+  line-height: 1.3em;
+}
+@media only screen and (min-width: 769px) {
+  .Stellla__en { right: 0; top: calc(100% + 30px); width: 18em; }
+}
+@media not screen and (min-width: 769px) {
+  .Stellla__frame {
+    --padding-sp: calc(-20px + var(--progress) * (40px));
+    width: calc(100% - var(--padding-sp));
+    height: calc(100% - var(--padding-sp));
+    opacity: 0.5;
+  }
+  .Stellla__cross_item { width: 20px; height: 20px; }
+  .Stellla__rect { padding: 10px; }
+  .Stellla__contentWrap { width: calc(100% - 20px); height: calc(100% - 20px); }
+  .Stellla__content { display: flex; flex-direction: column; justify-content: end; align-items: center; padding: 20px 0; }
+  .Stellla__main { width: 90%; padding-left: 0; margin: 0 auto; }
+  .Stellla__main_logo { width: 70%; }
+  .Stellla__main_text { font-size: 14px; letter-spacing: 0.05em; }
+  .Stellla__en { position: relative; flex: unset; margin-top: 3%; width: 90%; font-size: 12px; margin-bottom: 10px; }
+}
+
+/* More Works 的下划线。默认 scaleX(0)，hover 时从左展开、离开时从右收回 ——
+   靠切换 transform-origin 实现「进出方向不同」，这是原站的一处巧劲。 */
+.Works__more { font-family: var(--f-code); font-size: 16px; letter-spacing: 0.05em; padding-bottom: 4px; }
+.Works__more::after {
+  content: '';
+  position: absolute;
+  width: 100%;
+  height: 1px;
+  background-color: var(--c-gray-1);
+  bottom: 0;
+  left: 0;
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform var(--t-fast) ease;
+}
+.Works__more:hover::after { transform: scaleX(1); transform-origin: left; }
+.Works__more:not(:hover)::after { transform-origin: right; }
+.Works__more_link_icon { margin-left: 5px; }
+
+/* 作品「战绩」里的数字。用 Barlow —— 与正文的等宽/黑体都不同，
+   是原站唯一用到这个字族的地方。 */
+.Works__item_impression_count {
+  font-family: var(--f-num);
+  font-size: 24px;
+  font-weight: 500;
+  letter-spacing: 0em;
+  border-radius: 0.3em;
+  line-height: 1em;
+}
+
+/* 逐行容器与荧光笔。marker 的背景是一条几乎瞬间变黑的竖向渐变，
+   靠 background-size 从 0% 推到 100% 来「刷」过文字 —— 控制器逐帧写这个值。 */
+.MissionVision__text .MissionVision__line { position: relative; margin-bottom: 0.1em; }
+.MissionVision__text .MissionVision__marker {
+  background: linear-gradient(transparent 0%, #000 0.1%);
+  display: inline;
+  background-repeat: no-repeat;
+  background-size: 0% 100%;
+}
+
+/* KV 左下角的新闻位。原站首页留了这个位置但内容走的是右下的 News 栏。 */
+.KV__news { position: absolute; bottom: 27px; left: 27px; letter-spacing: 0.3em; }
+.KV__news_item,
+.KV__news_more { display: block; }
+
+/* 子刻度。激活时线从 4px 拉到 12px、标签变白 —— 与主刻度 16→20px 同构但更细。 */
+.TopScrollIndicator__section_item[data-active='true'] { opacity: 1; }
+.TopScrollIndicator__subsection_item[data-active='true'] { opacity: 1; }
+.TopScrollIndicator__subsection_item[data-active='true'] .TopScrollIndicator__subsection_line { width: 12px; }
+.TopScrollIndicator__subsection_item[data-active='true'] .TopScrollIndicator__subsection_label { color: #fff; }
+.TopScrollIndicator__subsection_label {
+  position: absolute;
+  left: calc(100% + 8px);
+  top: 0;
+  transform: translateY(-50%);
+  width: 100px;
+  font-size: 9px;
+  font-weight: 200;
+  color: rgba(255, 255, 255, 0.4);
+  transition: all var(--t-fast) ease;
+  letter-spacing: 0.08em;
+}

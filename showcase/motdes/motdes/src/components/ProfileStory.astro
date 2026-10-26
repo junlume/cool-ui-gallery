@@ -1,0 +1,47 @@
+---
+import { PROFILE_INTRO, PROFILE_CHAPTERS, PROFILE_SHOWCASES, PROFILE_END } from '../lib/profile-content.js';
+import '../styles/profile-story.css';
+---
+
+<section class="ProfileStory" data-profile-story aria-hidden="true" inert aria-label="个人创作与动漫案例">
+  <div class="ProfileStory__frame" aria-hidden="true"></div>
+  <div class="ProfileStory__process" data-profile-process>
+    <div class="ProfileStory__divider" aria-hidden="true"><span class="ProfileStory__spark">✦</span></div>
+    <header class="ProfileStory__intro">
+      <h2 class="ProfileStory__title" lang="en">{PROFILE_INTRO.title.map((line, index) => <span class="ProfileStory__intro_line" data-profile-intro-line={index}><span class="ProfileStory__intro_line_text">{line}</span></span>)}</h2>
+      <p class="ProfileStory__description">{PROFILE_INTRO.description}</p>
+      <span class="ProfileStory__location">{PROFILE_INTRO.location}</span>
+    </header>
+    {PROFILE_CHAPTERS.map((chapter, index) => (
+      <article class="ProfileStory__chapter" data-profile-chapter={index} aria-hidden="true" aria-labelledby={`profile-title-${index}`}>
+        <span class="ProfileStory__number">{chapter.number}</span>
+        <h3 class="ProfileStory__heading" id={`profile-title-${index}`} lang={chapter.lang}>{chapter.title}</h3>
+        <p class="ProfileStory__chapter_label">{chapter.label}</p>
+        <div class="ProfileStory__chapter_copy">{chapter.description.map((line, lineIndex) => <p data-profile-body-line={lineIndex}>{line}</p>)}</div>
+      </article>
+    ))}
+  </div>
+  <div class="ProfileStory__statement" data-profile-statement aria-hidden="true">
+    {PROFILE_SHOWCASES.map((showcase, index) => (
+      <article class:list={['ProfileStory__case', { 'ProfileStory__case--reversed': showcase.reversed }]} data-profile-case={index} aria-hidden="true" inert aria-labelledby={`profile-case-title-${index}`}>
+        <header class="ProfileStory__case_text">
+          <p class="ProfileStory__case_eyebrow" lang="en">{showcase.eyebrow}</p>
+          <h3 class="ProfileStory__case_title" id={`profile-case-title-${index}`} lang="en">{showcase.titleLines.map((line) => <span>{line}</span>)}</h3>
+          <p class="ProfileStory__case_tagline">{showcase.tagline}</p>
+        </header>
+        <figure class="ProfileStory__case_media">
+          <div class="ProfileStory__case_screen">
+            <video class="ProfileStory__case_video" data-profile-video data-src={showcase.video} poster={showcase.poster} preload="none" muted loop playsinline aria-label={showcase.title}></video>
+            <button class="ProfileStory__case_play" type="button" data-profile-play hidden>播放视频</button>
+          </div>
+          <figcaption class="ProfileStory__case_caption">{showcase.title}</figcaption>
+        </figure>
+      </article>
+    ))}
+  </div>
+  <footer class="ProfileStory__end" data-profile-end aria-hidden="true">
+    <div class="ProfileStory__end_identity"><p class="ProfileStory__eyebrow">BEHIND THE VISUALS</p><p class="ProfileStory__end_name">{PROFILE_END.name}</p><p class="ProfileStory__end_role">{PROFILE_END.role}</p></div>
+    <p class="ProfileStory__end_caption">{PROFILE_END.caption}<span>SCROLL TO EXPLORE</span></p>
+  </footer>
+  <div class="ProfileStory__folio" aria-hidden="true"><span>PROFILE <span data-profile-number>01</span></span><span class="ProfileStory__progress_track"><span data-profile-progress></span></span><span>SELECTED ANIMATION</span></div>
+</section>
